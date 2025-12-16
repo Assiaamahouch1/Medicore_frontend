@@ -32,6 +32,7 @@ export class UserInfoCardComponent {
     email: 'randomuser@pimjo.com',
     phone: '+09 363 398 46',
     bio: 'Team Manager',
+    avatar: '/images/user/avatar.jpg',
     social: {
       facebook: 'https://www.facebook.com/PimjoHQ',
       x: 'https://x.com/PimjoHQ',
@@ -45,4 +46,22 @@ export class UserInfoCardComponent {
     console.log('Saving changes...');
     this.modal.closeModal();
   }
+  onAvatarChange(event: Event) {
+  const input = event.target as HTMLInputElement;
+
+  if (input.files && input.files[0]) {
+    const file = input.files[0];
+
+    // Prévisualisation immédiate
+    const reader = new FileReader();
+    reader.onload = () => {
+      this.user.avatar = reader.result as string;
+    };
+    reader.readAsDataURL(file);
+
+    // Ici tu peux aussi stocker le fichier pour l’envoyer au backend
+    // this.selectedAvatarFile = file;
+  }
+}
+
 }

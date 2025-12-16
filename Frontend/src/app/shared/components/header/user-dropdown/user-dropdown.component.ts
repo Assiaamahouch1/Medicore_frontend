@@ -11,6 +11,11 @@ import { DropdownItemTwoComponent } from '../../ui/dropdown/dropdown-item/dropdo
 })
 export class UserDropdownComponent {
   isOpen = false;
+  user = {
+    nom: 'Musharof',
+    prenom: 'Chowdhury',
+    email: 'randomuser@pimjo.com',
+  };
 
   toggleDropdown() {
     this.isOpen = !this.isOpen;
