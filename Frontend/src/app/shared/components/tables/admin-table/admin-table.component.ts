@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ButtonComponent } from '../../ui/button/button.component';
 import { TableDropdownComponent } from '../../common/table-dropdown/table-dropdown.component';
 import { ModalService } from '../../../services/modal.service';
@@ -7,15 +7,8 @@ import { AdminAddModalComponent } from '../modals/admin-add-modal/admin-add-moda
 import { AdminEditModalComponent } from '../modals/admin-edit-modal/admin-edit-modal.component';
 import { AdminDeleteModalComponent } from '../modals/admin-delete-modal/admin-delete-modal.component';
 import { AdminShowModalComponent } from '../modals/admin-show-modal/admin-show-modal.component';
+import { AdminService, Admin } from '../../../../../services/admin.service';
 
-
-interface Transaction {
-  image: string;
-  nom: string;
-  prenom: string;
-  numTel: string;
-  email: string;
-}
 
 @Component({
   selector: 'app-admin-table',
@@ -31,155 +24,93 @@ interface Transaction {
   templateUrl: './admin-table.component.html',
   styles: ``
 })
-export class AdminTableComponent {
+export class AdminTableComponent implements OnInit{
 
-  constructor(public modal: ModalService) {}
-    
-  isAddModalOpen  = false;
-  openAddModal() { this.isAddModalOpen  = true; }
-  closeAddModal() { this.isAddModalOpen  = false; }
+  
+  transactionData: Admin[] = [];
+  selectedAdmin: Admin | null = null;
+  constructor(public modal: ModalService,
+    private adminService: AdminService
+  ) {}
+  
 
-  isEditModalOpen  = false;
-  openEditModal() { this.isEditModalOpen  = true; }
-  closeEditModal() { this.isEditModalOpen  = false; }
-
-  isDeleteModalOpen  = false;
-  openDeleteModal() { this.isDeleteModalOpen  = true; }
-  closeDeleteModal() { this.isDeleteModalOpen  = false; }
-
+  /*isAddModalOpen  = false;
+  isEditModalOpen  = false
+  isDeleteModalOpen  = false;*/
   isShowModalOpen  = false;
-  openShowModal() { this.isShowModalOpen  = true; }
-  closeShowModal() { this.isShowModalOpen  = false; }
 
-  user = {
-    firstName: 'Musharof',
-    lastName: 'Chowdhury',
-    email: 'randomuser@pimjo.com',
-    phone: '+09 363 398 46',
-    bio: 'Team Manager',
-    avatar: '/images/user/avatar.jpg',
-    social: {
-      facebook: 'https://www.facebook.com/PimjoHQ',
-      x: 'https://x.com/PimjoHQ',
-      linkedin: 'https://www.linkedin.com/company/pimjo',
-      instagram: 'https://instagram.com/PimjoHQ',
-    },
-  };
+  /*openAddModal() { 
+    this.selectedAdmin = null;
+    this.isAddModalOpen = true; 
+  }
+  
+  closeAddModal() { 
+    this.isAddModalOpen = false;
+    this.loadAdmins(); // Recharger après ajout
+  }
 
-  transactionData: Transaction[] = [
-  {
-    image: "/images/user/user-01.jpg",
-    nom: "Dupont",
-    prenom: "Jean",
-    numTel: "+33 6 12 34 56 78",
-    email: "jean.dupont@example.com",
-  },
-  {
-    image: "/images/user/user-01.jpg",
-    nom: "Martin",
-    prenom: "Claire",
-    numTel: "+33 6 98 76 54 32",
-    email: "claire.martin@example.com",
-  },
-  {
-    image: "/images/user/user-02.jpg",
-    nom: "Nguyen",
-    prenom: "Thi",
-    numTel: "+33 7 11 22 33 44",
-    email: "thi.nguyen@example.com",
-  },
-  {
-    image: "/images/user/user-08.jpg",
-    nom: "Ahmed",
-    prenom: "Omar",
-    numTel: "+33 6 55 66 77 88",
-    email: "omar.ahmed@example.com",
-  },
-  {
-    image: "/images/user/user-01.jpg",
-    nom: "Dupont",
-    prenom: "Jean",
-    numTel: "+33 6 12 34 56 78",
-    email: "jean.dupont@example.com",
-  },
-  {
-    image: "/images/user/user-01.jpg",
-    nom: "Martin",
-    prenom: "Claire",
-    numTel: "+33 6 98 76 54 32",
-    email: "claire.martin@example.com",
-  },
-  {
-    image: "/images/user/user-02.jpg",
-    nom: "Nguyen",
-    prenom: "Thi",
-    numTel: "+33 7 11 22 33 44",
-    email: "thi.nguyen@example.com",
-  },
-  {
-    image: "/images/user/user-08.jpg",
-    nom: "Ahmed",
-    prenom: "Omar",
-    numTel: "+33 6 55 66 77 88",
-    email: "omar.ahmed@example.com",
-  },
-  {
-    image: "/images/user/user-01.jpg",
-    nom: "Dupont",
-    prenom: "Jean",
-    numTel: "+33 6 12 34 56 78",
-    email: "jean.dupont@example.com",
-  },
-  {
-    image: "/images/user/user-01.jpg",
-    nom: "Martin",
-    prenom: "Claire",
-    numTel: "+33 6 98 76 54 32",
-    email: "claire.martin@example.com",
-  },
-  {
-    image: "/images/user/user-02.jpg",
-    nom: "Nguyen",
-    prenom: "Thi",
-    numTel: "+33 7 11 22 33 44",
-    email: "thi.nguyen@example.com",
-  },
-  {
-    image: "/images/user/user-08.jpg",
-    nom: "Ahmed",
-    prenom: "Omar",
-    numTel: "+33 6 55 66 77 88",
-    email: "omar.ahmed@example.com",
-  },
-  {
-    image: "/images/user/user-01.jpg",
-    nom: "Dupont",
-    prenom: "Jean",
-    numTel: "+33 6 12 34 56 78",
-    email: "jean.dupont@example.com",
-  },
-  {
-    image: "/images/user/user-01.jpg",
-    nom: "Martin",
-    prenom: "Claire",
-    numTel: "+33 6 98 76 54 32",
-    email: "claire.martin@example.com",
-  },
-  {
-    image: "/images/user/user-02.jpg",
-    nom: "Nguyen",
-    prenom: "Thi",
-    numTel: "+33 7 11 22 33 44",
-    email: "thi.nguyen@example.com",
-  },
-  {
-    image: "/images/user/user-08.jpg",
-    nom: "Ahmed",
-    prenom: "Omar",
-    numTel: "+33 6 55 66 77 88",
-    email: "omar.ahmed@example.com",
-  },
-  ];
+  openEditModal(admin: Admin) { 
+    this.selectedAdmin = admin;
+    this.isEditModalOpen = true; 
+  }
+  
+  closeEditModal() { 
+    this.isEditModalOpen = false;
+    this.selectedAdmin = null;
+    this.loadAdmins(); // Recharger après modification
+  }
+
+  openDeleteModal(admin: Admin) { 
+    this.selectedAdmin = admin;
+    this.isDeleteModalOpen = true; 
+  }
+  
+  closeDeleteModal(deleted: boolean = false) { 
+    this.isDeleteModalOpen = false;
+    this.selectedAdmin = null;
+    if (deleted) {
+      this.loadAdmins(); // Recharger après suppression
+    }
+  }*/
+
+  openShowModal(admin: Admin) { 
+    this.selectedAdmin = admin;
+    this.isShowModalOpen = true; 
+  }
+  
+  closeShowModal() { 
+    this.isShowModalOpen = false;
+    this.selectedAdmin = null;
+  }
+  ngOnInit() {
+    this.loadAdmins();
+  }
+
+  loadAdmins(): void {
+    this.adminService.getAllAdmins().subscribe({
+      next: (data: Admin[]) => {
+        console.log('Données brutes du backend:', data); // DEBUG
+        
+        this.transactionData = data.map((admin: Admin) => {
+          console.log('Avatar brut:', admin.avatar); // DEBUG
+          
+          const avatarUrl = admin.avatar 
+            ? this.adminService.getImageUrl(admin.avatar)
+            : '/images/user/default.jpg';
+            
+          console.log('Avatar URL final:', avatarUrl); // DEBUG
+          
+          return {
+            ...admin,
+            avatar: avatarUrl
+          };
+        });
+      },
+      error: (error: any) => {
+        console.error('Erreur chargement admins:', error);
+      }
+    });
+  }
 
   currentPage = 1;
   itemsPerPage = 6;
@@ -188,7 +119,7 @@ export class AdminTableComponent {
     return Math.ceil(this.transactionData.length / this.itemsPerPage);
   }
 
-  get currentItems(): Transaction[] {
+  get currentItems(): Admin[] {
     const start = (this.currentPage - 1) * this.itemsPerPage;
     return this.transactionData.slice(start, start + this.itemsPerPage);
   }
@@ -199,12 +130,12 @@ export class AdminTableComponent {
     }
   }
 
-  handleViewMore(item: Transaction) {
+  handleViewMore(item: Admin) {
     // logic here
     console.log('View More:', item);
   }
 
-  handleDelete(item: Transaction) {
+  handleDelete(item: Admin) {
     // logic here
     console.log('Delete:', item);
   }
@@ -221,23 +152,7 @@ export class AdminTableComponent {
   handleSave() {
     // Handle save logic here
     console.log('Saving changes...');
-    this.modal.closeModal();
+    //this.modal.closeModal();
   }
-  onAvatarChange(event: Event) {
-  const input = event.target as HTMLInputElement;
-
-  if (input.files && input.files[0]) {
-    const file = input.files[0];
-
-    // Prévisualisation immédiate
-    const reader = new FileReader();
-    reader.onload = () => {
-      this.user.avatar = reader.result as string;
-    };
-    reader.readAsDataURL(file);
-
-    // Ici tu peux aussi stocker le fichier pour l’envoyer au backend
-    // this.selectedAvatarFile = file;
-  }
-}
+  
 }

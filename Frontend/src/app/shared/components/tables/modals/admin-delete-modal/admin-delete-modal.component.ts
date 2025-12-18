@@ -1,15 +1,11 @@
 import { Component, EventEmitter, Output, Input } from '@angular/core';
 import { ButtonComponent } from '../../../ui/button/button.component';
-import { InputFieldComponent } from '../../../form/input/input-field.component';
-import { LabelComponent } from '../../../form/label/label.component';
 import { ModalComponent } from '../../../ui/modal/modal.component';
 
 
 @Component({
   selector: 'app-admin-delete-modal',
-  imports: [ButtonComponent,
-      InputFieldComponent,
-      LabelComponent,ModalComponent], 
+  imports: [ButtonComponent, ModalComponent], 
   templateUrl: './admin-delete-modal.component.html',
 })
 export class AdminDeleteModalComponent {

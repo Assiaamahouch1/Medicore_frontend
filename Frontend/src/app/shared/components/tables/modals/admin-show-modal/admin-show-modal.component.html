@@ -23,7 +23,7 @@
               <div class="relative w-24 h-24">
                 <!-- Image actuelle -->
                 <img
-                  [src]="user.avatar"
+                  [src]="admin?.avatar || ''"
                   alt="Avatar"
                   class="w-full h-full rounded-full object-cover border border-gray-300 dark:border-gray-700"
                 />
@@ -64,19 +64,19 @@
             <div class="grid grid-cols-1 gap-x-6 gap-y-5 lg:grid-cols-2">
               <div class="col-span-2 lg:col-span-1">
                 <app-label>Prenom</app-label>
-                <app-input-field type="text" [value]="user.firstName" />
+                <app-input-field type="text" [value]="admin?.prenom || ''" />
               </div>
               <div class="col-span-2 lg:col-span-1">
                 <app-label>Nom</app-label>
-                <app-input-field type="text" [value]="user.lastName" />
+                <app-input-field type="text" [value]="admin?.nom || ''" />
               </div>
               <div class="col-span-2 lg:col-span-1">
                 <app-label>Email</app-label>
-                <app-input-field type="text" [value]="user.email" />
+                <app-input-field type="text" [value]="admin?.username || ''" />
               </div>
               <div class="col-span-2 lg:col-span-1">
                 <app-label>Téléphone</app-label>
-                <app-input-field type="text" [value]="user.phone" />
+                <app-input-field type="text" [value]="admin?.numTel || ''" />
               </div>
             </div>
           </div>
