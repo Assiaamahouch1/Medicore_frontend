@@ -1,6 +1,5 @@
 import { Component, EventEmitter, Output, Input } from '@angular/core';
 import { ButtonComponent } from '../../../ui/button/button.component';
-import { InputFieldComponent } from '../../../form/input/input-field.component';
 import { LabelComponent } from '../../../form/label/label.component';
 import { ModalComponent } from '../../../ui/modal/modal.component';
 import { Admin } from '../../../../../../services/admin.service';
@@ -11,7 +10,6 @@ import { CommonModule } from '@angular/common'; // ← AJOUTER CECI
   selector: 'app-admin-show-modal',
   standalone: true,
   imports: [ButtonComponent,
-      InputFieldComponent,
       LabelComponent,ModalComponent, CommonModule], 
   templateUrl: './admin-show-modal.component.html',
 })

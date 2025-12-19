@@ -51,7 +51,12 @@ export class AdminService {
     });
   }
 
-  getImageUrl(filename: string): string {
-    return `/image/${filename}`;
-  }
+  getAvatar(urlOrFilename: string): Observable<Blob> {
+  const url = urlOrFilename.startsWith('http') 
+    ? urlOrFilename 
+    : `${this.apiUrl}/image/${urlOrFilename}`;
+    
+  return this.http.get(url, { responseType: 'blob' });
+}
+
 }

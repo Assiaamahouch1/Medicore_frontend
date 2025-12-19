@@ -1,48 +1,52 @@
 import { Component, EventEmitter, Output, Input } from '@angular/core';
-import { ButtonComponent } from '../../../ui/button/button.component';
 import { ModalComponent } from '../../../ui/modal/modal.component';
+import { AdminService, Admin } from '../../../../../../services/admin.service';
+import { CommonModule } from '@angular/common';
 
 
 @Component({
   selector: 'app-admin-delete-modal',
-  imports: [ButtonComponent, ModalComponent], 
+  imports: [ModalComponent, CommonModule], 
   templateUrl: './admin-delete-modal.component.html',
 })
 export class AdminDeleteModalComponent {
   @Input() isDeleteModalOpen: boolean = false; 
-  @Output() close = new EventEmitter<void>();
-
+  @Output() close = new EventEmitter<boolean>();
+  @Input() admin: Admin | null = null; // 
   
 
-  user = {
-    firstName: '',
-    lastName: '',
-    email: '',
-    phone: '',
-    avatar: '/images/user/avatar.jpg',
-  };
+  isLoading: boolean = false;
+  errorMessage: string = '';
 
-  onAvatarChange(event: Event) {
-    const input = event.target as HTMLInputElement;
-    if (input.files && input.files[0]) {
-      const reader = new FileReader();
-      reader.onload = () => this.user.avatar = reader.result as string;
-      reader.readAsDataURL(input.files[0]);
-    }
-  }
+  constructor(private adminService: AdminService) {}
+
+ 
   closeDeleteModal() {
   this.close.emit();
 }
 
+  confirmDelete() {
+      if (!this.admin?.id) {
+        this.errorMessage = 'ID admin manquant';
+        return;
+      }
 
-  handleSave() {
-  console.log('Saving...', this.user);
-  this.close.emit();
-}
-confirmDelete() {
-  console.log('Utilisateur supprimé');
-  this.closeDeleteModal();
-}
+      this.isLoading = true;
+      this.errorMessage = '';
+
+      this.adminService.deleteAdmin(this.admin.id).subscribe({
+        next: () => {
+          console.log('✅ Admin supprimé:', this.admin?.id);
+          this.isLoading = false;
+          this.close.emit(true); // ✅ Suppression réussie
+        },
+        error: (error) => {
+          console.error('❌ Erreur suppression:', error);
+          this.errorMessage = 'Erreur lors de la suppression';
+          this.isLoading = false;
+        }
+      });
+    }
 
 
 }

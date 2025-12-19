@@ -19,27 +19,33 @@
 
     <!-- Message -->
     <p class="mb-8 text-base text-gray-600 dark:text-gray-300">
-      Do you really want to delete these records? This process cannot be undone.
+      Voulez-vous vraiment supprimer <strong>{{ admin?.prenom }} {{ admin?.nom }}</strong> ?
+      Cette action est irréversible.
     </p>
+    <!-- Message d'erreur -->
+    <div *ngIf="errorMessage" class="mb-4 rounded-lg bg-red-50 p-3 text-sm text-red-800 dark:bg-red-900/20 dark:text-red-400">
+      {{ errorMessage }}
+    </div>
 
     <!-- Boutons -->
     <div class="flex justify-center gap-4">
-      <app-button
-        size="md"
-        variant="outline"
-        (btnClick)="closeDeleteModal()"
-        className="min-w-[120px] border-gray-300 text-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700"
+      <button
+        type="button"
+        (click)="closeDeleteModal()"
+        [disabled]="isLoading"
+        class="min-w-[120px] rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
       >
-        Cancel
-      </app-button>
+        Annuler
+      </button>
 
-      <app-button
-        size="md"
-        (btnClick)="confirmDelete()"
-        className="min-w-[120px] bg-red-500 text-white hover:bg-red-600"
-      >
-        Delete
-      </app-button>
+      <button
+      type="button"
+      (click)="confirmDelete()"
+      [disabled]="isLoading"
+      class="min-w-[120px] rounded-lg bg-red-500 px-4 py-2.5 text-sm font-medium text-white hover:bg-red-600 disabled:opacity-50 disabled:cursor-not-allowed"
+    >
+      Supprimer
+    </button>
     </div>
   </div>
 </app-modal>

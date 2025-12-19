@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { ButtonComponent } from '../../ui/button/button.component';
 import { TableDropdownComponent } from '../../common/table-dropdown/table-dropdown.component';
 import { ModalService } from '../../../services/modal.service';
@@ -12,8 +13,10 @@ import { AdminService, Admin } from '../../../../../services/admin.service';
 
 @Component({
   selector: 'app-admin-table',
+  standalone: true,
   imports: [
     CommonModule,
+    FormsModule,
     ButtonComponent,
     TableDropdownComponent,
     AdminAddModalComponent,
@@ -29,24 +32,26 @@ export class AdminTableComponent implements OnInit{
   
   transactionData: Admin[] = [];
   selectedAdmin: Admin | null = null;
+  filteredData: Admin[] = [];
+  searchTerm: string = '';
   constructor(public modal: ModalService,
     private adminService: AdminService
   ) {}
   
 
-  /*isAddModalOpen  = false;
+  isAddModalOpen  = false;
   isEditModalOpen  = false
-  isDeleteModalOpen  = false;*/
+  isDeleteModalOpen  = false;
   isShowModalOpen  = false;
 
-  /*openAddModal() { 
+  openAddModal() { 
     this.selectedAdmin = null;
     this.isAddModalOpen = true; 
   }
   
   closeAddModal() { 
     this.isAddModalOpen = false;
-    this.loadAdmins(); // Recharger après ajout
+    this.loadAdmins(); 
   }
 
   openEditModal(admin: Admin) { 
@@ -57,7 +62,7 @@ export class AdminTableComponent implements OnInit{
   closeEditModal() { 
     this.isEditModalOpen = false;
     this.selectedAdmin = null;
-    this.loadAdmins(); // Recharger après modification
+    this.loadAdmins(); 
   }
 
   openDeleteModal(admin: Admin) { 
@@ -69,9 +74,9 @@ export class AdminTableComponent implements OnInit{
     this.isDeleteModalOpen = false;
     this.selectedAdmin = null;
     if (deleted) {
-      this.loadAdmins(); // Recharger après suppression
+      this.loadAdmins(); 
     }
-  }*/
+  }
 
   openShowModal(admin: Admin) { 
     this.selectedAdmin = admin;
@@ -89,22 +94,26 @@ export class AdminTableComponent implements OnInit{
   loadAdmins(): void {
     this.adminService.getAllAdmins().subscribe({
       next: (data: Admin[]) => {
-        console.log('Données brutes du backend:', data); // DEBUG
+        console.log('Données brutes du backend:', data);
         
         this.transactionData = data.map((admin: Admin) => {
-          console.log('Avatar brut:', admin.avatar); // DEBUG
-          
-          const avatarUrl = admin.avatar 
-            ? this.adminService.getImageUrl(admin.avatar)
-            : '/images/user/default.jpg';
-            
-          console.log('Avatar URL final:', avatarUrl); // DEBUG
-          
-          return {
-            ...admin,
-            avatar: avatarUrl
-          };
+          if (admin.avatar && admin.avatar.startsWith('http')) {
+            this.adminService.getAvatar(admin.avatar).subscribe({
+              next: (blob) => {
+                admin.avatar = URL.createObjectURL(blob);
+              },
+              error: (err) => {
+                console.error('Erreur chargement image:', err);
+                admin.avatar = '/images/user/default.png';
+              }
+            });
+          } else {
+            admin.avatar = '/images/user/default.png';
+          }
+          return admin;
         });
+        
+        this.filteredData = [...this.transactionData];
       },
       error: (error: any) => {
         console.error('Erreur chargement admins:', error);
@@ -112,16 +121,34 @@ export class AdminTableComponent implements OnInit{
     });
   }
 
+  onSearchChange(): void {
+    const term = this.searchTerm.toLowerCase().trim();
+    
+    if (!term) {
+      this.filteredData = [...this.transactionData];
+    } else {
+      this.filteredData = this.transactionData.filter(admin => 
+        admin.nom?.toLowerCase().includes(term) ||
+        admin.prenom?.toLowerCase().includes(term) ||
+        admin.username?.toLowerCase().includes(term) ||
+        admin.numTel?.toLowerCase().includes(term)
+      );
+    }
+    
+    this.currentPage = 1;
+    console.log('Recherche:', term, 'Résultats:', this.filteredData.length);
+  }
+
   currentPage = 1;
   itemsPerPage = 6;
 
   get totalPages(): number {
-    return Math.ceil(this.transactionData.length / this.itemsPerPage);
+    return Math.ceil(this.filteredData.length / this.itemsPerPage);
   }
 
   get currentItems(): Admin[] {
     const start = (this.currentPage - 1) * this.itemsPerPage;
-    return this.transactionData.slice(start, start + this.itemsPerPage);
+    return this.filteredData.slice(start, start + this.itemsPerPage);
   }
 
   goToPage(page: number) {
