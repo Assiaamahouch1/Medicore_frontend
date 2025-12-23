@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 import { ProfileComponent } from './pages/profile/profile.component';
-import { BasicTablesComponent } from './pages/tables/basic-tables.component';
+import { BasicTablesComponent } from './pages/admin/admin.component';
 import { NotFoundComponent } from './pages/other-page/not-found/not-found.component';
 import { AppLayoutComponent } from './shared/layout/app-layout/app-layout.component';
 

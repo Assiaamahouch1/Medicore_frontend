@@ -7,7 +7,7 @@ import { AdminTableComponent } from '../../shared/components/tables/admin-table/
   imports: [
     AdminTableComponent,
   ],
-  templateUrl: './basic-tables.component.html',
+  templateUrl: './admin.component.html',
   styles: ``
 })
 export class BasicTablesComponent {
