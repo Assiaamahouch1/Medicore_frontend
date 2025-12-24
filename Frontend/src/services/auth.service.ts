@@ -2,6 +2,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { Router } from '@angular/router';
 
 export interface AuthAdmin {
   id?: number;
@@ -21,7 +22,52 @@ export interface AuthAdmin {
 export class AuthService {
   private apiUrl = 'http://localhost:8080/api/auth';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient,
+    private router: Router
+  ) {}
+
+  login(username: string, password: string): Observable<string> {
+    const payload = {
+      username: username,
+      password: password
+    };
+
+    return this.http.post<string>(`${this.apiUrl}/login`, payload, {
+      responseType: 'text' as 'json'
+    });
+  }
+
+setToken(token: string): void {
+  sessionStorage.setItem('token', token);
+}
+
+getToken(): string | null {
+  return sessionStorage.getItem('token');
+}
+
+logout(): void {
+  sessionStorage.removeItem('token');
+  this.router.navigate(['/signin']);
+}
+isLoggedIn(): boolean {
+  return !!sessionStorage.getItem('token'); // ou un autre moyen d'auth
+}
+
+
+  // --- Mot de passe oublié ---
+  forgotPassword(username: string): Observable<string> {
+    const payload = { username };
+    return this.http.post<string>(`${this.apiUrl}/forgot-password`, payload, {
+      responseType: 'text' as 'json'
+    });
+  }
+
+ resetPassword(token: string, password: string, confirmPassword: string): Observable<string> {
+  const payload = { password, confirmPassword };
+  return this.http.post<string>(`${this.apiUrl}/reset-password/${token}`, payload, {
+    responseType: 'text' as 'json'
+  });
+}
 
   getCurrentAuth(): Observable<AuthAdmin> {
     return this.http.get<AuthAdmin>(`${this.apiUrl}/me`);

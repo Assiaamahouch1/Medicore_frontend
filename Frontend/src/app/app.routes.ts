@@ -3,6 +3,9 @@ import { ProfileComponent } from './pages/profile/profile.component';
 import { BasicTablesComponent } from './pages/admin/admin.component';
 import { NotFoundComponent } from './pages/other-page/not-found/not-found.component';
 import { AppLayoutComponent } from './shared/layout/app-layout/app-layout.component';
+import { SignInComponent } from './pages/auth-pages/sign-in/sign-in.component';
+import { ForgotComponent } from './pages/auth-pages/forgot-password/forgot-password.component';
+import { ResetComponent } from './pages/auth-pages/reset-password/reset-password.component';
 
 export const routes: Routes = [
   {
@@ -22,6 +25,14 @@ export const routes: Routes = [
     ]
   },
   // auth pages
+  {
+    path:'signin',
+    component:SignInComponent,
+    title:'Angular Sign In Dashboard | TailAdmin - Angular Admin Dashboard Template'
+  },
+   // Mot de passe oublié
+  { path: 'forgot-password', component: ForgotComponent },
+  { path: 'reset-password/:token', component: ResetComponent },
   // error pages
   {
     path:'**',
