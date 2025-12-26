@@ -33,6 +33,7 @@ export class UserInfoCardComponent implements OnInit {
     prenom: '',
     username: '',
     numTel: '',
+    role:'',
     avatar: this.defaultAvatar
   };
 

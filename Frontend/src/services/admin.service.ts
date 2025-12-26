@@ -17,7 +17,7 @@ export interface Admin {
   providedIn: 'root'
 })
 export class AdminService {
-  private apiUrl = 'http://localhost:8080/admins'; // Adapter selon ton port
+  private apiUrl = 'http://localhost:8081/api/auth'; // Adapter selon ton port
 
   constructor(private http: HttpClient) {}
 

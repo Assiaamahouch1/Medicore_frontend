@@ -26,6 +26,7 @@ export class UserDropdownComponent implements OnInit {
     prenom: '',
     username: '',
     numTel: '',
+    role:'',
     avatar: this.defaultAvatar
   };
 

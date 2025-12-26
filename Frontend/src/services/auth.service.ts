@@ -11,7 +11,7 @@ export interface AuthAdmin {
   prenom: string;
   numTel: string;
   username: string;
-  role?: any;
+  role: any;
   actif?: boolean;
   cabinetId?: number;
 }
@@ -20,7 +20,7 @@ export interface AuthAdmin {
   providedIn: 'root'
 })
 export class AuthService {
-  private apiUrl = 'http://localhost:8080/api/auth';
+  private apiUrl = 'http://localhost:8081/api/auth';
 
   constructor(private http: HttpClient,
     private router: Router
@@ -98,7 +98,7 @@ isLoggedIn(): boolean {
     
     // Si c'est un chemin qui commence par /
     if (avatarValue.startsWith('/')) {
-      return `http://localhost:8080${avatarValue}`;
+      return `http://localhost:8081${avatarValue}`;
     }
     
     // Si c'est juste un nom de fichier
