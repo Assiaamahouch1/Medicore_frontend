@@ -4,14 +4,29 @@ import { AuthService } from '../../services/auth.service';
 
 @Injectable({ providedIn: 'root' })
 export class AuthGuard implements CanActivate {
-  constructor(private authService: AuthService, private router: Router) {}
 
-  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
+  constructor(
+    private authService: AuthService,
+    private router: Router
+  ) {}
+
+  canActivate(
+    route: ActivatedRouteSnapshot,
+    state: RouterStateSnapshot
+  ): boolean {
+
+    // ✅ autoriser l’accès à /signin sans vérification
+    if (state.url === '/signin') {
+      return true;
+    }
+
+    // ✅ utilisateur connecté
     if (this.authService.isLoggedIn()) {
       return true;
-    } else {
-      this.router.navigate(['/signin']);
-      return false;
     }
+
+    // ❌ non connecté → redirection
+    this.router.navigate(['/signin']);
+    return false;
   }
 }

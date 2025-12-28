@@ -10,7 +10,6 @@ import { AdminDeleteModalComponent } from '../modals/admin-delete-modal/admin-de
 import { AdminShowModalComponent } from '../modals/admin-show-modal/admin-show-modal.component';
 import { AdminService, Admin } from '../../../../../services/admin.service';
 
-
 @Component({
   selector: 'app-admin-table',
   standalone: true,
@@ -27,22 +26,25 @@ import { AdminService, Admin } from '../../../../../services/admin.service';
   templateUrl: './admin-table.component.html',
   styles: ``
 })
-export class AdminTableComponent implements OnInit{
-
+export class AdminTableComponent implements OnInit {
   
   transactionData: Admin[] = [];
   selectedAdmin: Admin | null = null;
   filteredData: Admin[] = [];
   searchTerm: string = '';
-  constructor(public modal: ModalService,
+  
+  avatarUrls: Map<number, string> = new Map();
+  defaultAvatar = '/images/user/default.png';
+
+  constructor(
+    public modal: ModalService,
     private adminService: AdminService
   ) {}
-  
 
-  isAddModalOpen  = false;
-  isEditModalOpen  = false
-  isDeleteModalOpen  = false;
-  isShowModalOpen  = false;
+  isAddModalOpen = false;
+  isEditModalOpen = false;
+  isDeleteModalOpen = false;
+  isShowModalOpen = false;
 
   openAddModal() { 
     this.selectedAdmin = null;
@@ -87,6 +89,7 @@ export class AdminTableComponent implements OnInit{
     this.isShowModalOpen = false;
     this.selectedAdmin = null;
   }
+
   ngOnInit() {
     this.loadAdmins();
   }
@@ -96,29 +99,45 @@ export class AdminTableComponent implements OnInit{
       next: (data: Admin[]) => {
         console.log('Données brutes du backend:', data);
         
-        this.transactionData = data.map((admin: Admin) => {
-          if (admin.avatar && admin.avatar.startsWith('http')) {
-            this.adminService.getAvatar(admin.avatar).subscribe({
-              next: (blob) => {
-                admin.avatar = URL.createObjectURL(blob);
-              },
-              error: (err) => {
-                console.error('Erreur chargement image:', err);
-                admin.avatar = '/images/user/default.png';
-              }
-            });
-          } else {
-            admin.avatar = '/images/user/default.png';
-          }
-          return admin;
-        });
-        
+        this.transactionData = data;
         this.filteredData = [...this.transactionData];
+        
+        data.forEach(admin => {
+          if (admin.id) {
+            this.loadAdminAvatar(admin.id, admin.avatar);
+          }
+        });
       },
       error: (error: any) => {
         console.error('Erreur chargement admins:', error);
       }
     });
+  }
+
+  loadAdminAvatar(adminId: number, avatarFilename?: string): void {
+    if (!avatarFilename) {
+      this.avatarUrls.set(adminId, this.defaultAvatar);
+      return;
+    }
+
+    this.adminService.getAvatar(avatarFilename).subscribe({
+      next: (blob) => {
+        const reader = new FileReader();
+        reader.onload = () => {
+          this.avatarUrls.set(adminId, reader.result as string);
+        };
+        reader.readAsDataURL(blob);
+      },
+      error: (err) => {
+        console.error(`Erreur chargement avatar admin ${adminId}:`, err);
+        this.avatarUrls.set(adminId, this.defaultAvatar);
+      }
+    });
+  }
+
+  getAdminAvatar(adminId?: number): string {
+    if (!adminId) return this.defaultAvatar;
+    return this.avatarUrls.get(adminId) || this.defaultAvatar;
   }
 
   onSearchChange(): void {
@@ -158,28 +177,22 @@ export class AdminTableComponent implements OnInit{
   }
 
   handleViewMore(item: Admin) {
-    // logic here
     console.log('View More:', item);
   }
 
   handleDelete(item: Admin) {
-    // logic here
     console.log('Delete:', item);
   }
 
   handleFilter() {
     console.log('Filter clicked');
-    // Add your filter logic here
   }
 
   handleSeeAll() {
     console.log('See all clicked');
-    // Add your see all logic here
   }
+
   handleSave() {
-    // Handle save logic here
     console.log('Saving changes...');
-    //this.modal.closeModal();
   }
-  
 }

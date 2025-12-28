@@ -1,4 +1,3 @@
-// user-info-card.component.ts
 import { Component, OnInit } from '@angular/core';
 import { ModalService } from '../../../services/modal.service';
 import { AuthService, AuthAdmin } from '../../../../../services/auth.service';
@@ -28,12 +27,15 @@ export class UserInfoCardComponent implements OnInit {
   selectedAvatarFile: File | null = null;
   defaultAvatar = '/images/user/default.png';
 
+  avatarDataUrl: string = this.defaultAvatar;
+
   user: AuthAdmin = {
     nom: '',
     prenom: '',
     username: '',
     numTel: '',
-    avatar: this.defaultAvatar
+    role: '',
+    avatar: ''
   };
 
   userBackup: AuthAdmin = { ...this.user };
@@ -56,25 +58,38 @@ export class UserInfoCardComponent implements OnInit {
     this.authService.getCurrentAuth().subscribe({
       next: (user) => {
         console.log('👤 User reçu du backend:', user);
-        console.log('Avatar brut:', user.avatar);
-        
-        this.user = {
-          ...user,
-          // getAvatar gère automatiquement les URLs complètes
-          avatar: user.avatar 
-            ? this.authService.getAvatar(user.avatar)
-            : this.defaultAvatar
-        };
-        
-        console.log('Avatar URL finale:', this.user.avatar);
-        
+        this.user = user;
         this.userBackup = { ...this.user };
+        
+        if (user.avatar) {
+          this.loadAvatarWithAuth(user.avatar);
+        } else {
+          this.avatarDataUrl = this.defaultAvatar;
+        }
+        
         this.loading = false;
       },
       error: (err) => {
-        console.error('Erreur chargement:', err);
-        this.user.avatar = this.defaultAvatar;
+        console.error('❌ Erreur chargement:', err);
+        this.avatarDataUrl = this.defaultAvatar;
         this.loading = false;
+      }
+    });
+  }
+
+  loadAvatarWithAuth(avatarFilename: string): void {
+    this.authService.getAvatarBlob(avatarFilename).subscribe({
+      next: (blob) => {
+        const reader = new FileReader();
+        reader.onload = () => {
+          this.avatarDataUrl = reader.result as string;
+          console.log('✅ Avatar chargé avec succès en base64');
+        };
+        reader.readAsDataURL(blob);
+      },
+      error: (err) => {
+        console.error('❌ Erreur chargement avatar:', err);
+        this.avatarDataUrl = this.defaultAvatar;
       }
     });
   }
@@ -110,7 +125,7 @@ export class UserInfoCardComponent implements OnInit {
 
       const reader = new FileReader();
       reader.onload = () => {
-        this.user.avatar = reader.result as string;
+        this.avatarDataUrl = reader.result as string;
       };
       reader.readAsDataURL(file);
     }
@@ -130,16 +145,12 @@ export class UserInfoCardComponent implements OnInit {
       // Upload avatar
       this.authService.uploadImage(this.user.id, this.selectedAvatarFile).subscribe({
         next: (response) => {
-          console.log(' Réponse upload:', response);
-          
-          // La réponse peut être une URL complète ou un filename
-          this.user.avatar = this.authService.getAvatar(response);
-          console.log('Nouvel avatar URL:', this.user.avatar);
-          
+          console.log('📤 Réponse upload:', response);
+          this.user.avatar = response; 
           this.updateUserInfo();
         },
         error: (err) => {
-          console.error(' Erreur upload:', err);
+          console.error('❌ Erreur upload:', err);
           this.loading = false;
         }
       });
@@ -160,27 +171,20 @@ export class UserInfoCardComponent implements OnInit {
 
     this.authService.updateCurrentAuth(this.user.id, updates).subscribe({
       next: (updatedUser) => {
-        console.log('Profil mis à jour:', updatedUser);
-        console.log('Avatar retourné:', updatedUser.avatar);
-        
-        // Construire l'URL finale de l'avatar
-        this.user = {
-          ...updatedUser,
-          avatar: updatedUser.avatar 
-            ? this.authService.getAvatar(updatedUser.avatar)
-            : this.defaultAvatar
-        };
-        
-        console.log('Avatar final appliqué:', this.user.avatar);
-        
+        console.log('✅ Profil mis à jour:', updatedUser);
+        this.user = updatedUser;
         this.userBackup = { ...this.user };
+        
+        if (updatedUser.avatar) {
+          this.loadAvatarWithAuth(updatedUser.avatar);
+        }
+        
         this.selectedAvatarFile = null;
         this.loading = false;
         this.closeModal();
-        
       },
       error: (err) => {
-        console.error('Erreur mise à jour:', err);
+        console.error('❌ Erreur mise à jour:', err);
         this.loading = false;
       }
     });

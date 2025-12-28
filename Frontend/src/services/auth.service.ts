@@ -11,7 +11,7 @@ export interface AuthAdmin {
   prenom: string;
   numTel: string;
   username: string;
-  role?: any;
+  role: any;
   actif?: boolean;
   cabinetId?: number;
 }
@@ -20,7 +20,7 @@ export interface AuthAdmin {
   providedIn: 'root'
 })
 export class AuthService {
-  private apiUrl = 'http://localhost:8080/api/auth';
+  private apiUrl = 'http://localhost:8081/api/auth';
 
   constructor(private http: HttpClient,
     private router: Router
@@ -74,7 +74,7 @@ isLoggedIn(): boolean {
   }
 
   updateCurrentAuth(id: number, superAdmin: Partial<AuthAdmin>): Observable<AuthAdmin> {
-    return this.http.put<AuthAdmin>(`${this.apiUrl}/${id}`, superAdmin);
+    return this.http.put<AuthAdmin>(`${this.apiUrl}/superadmin/${id}`, superAdmin);
   }
 
   uploadImage(id: number, file: File): Observable<string> {
@@ -82,7 +82,7 @@ isLoggedIn(): boolean {
     formData.append('file', file);
     formData.append('id', id.toString());
     
-    return this.http.put(`${this.apiUrl}/image`, formData, {
+    return this.http.put(`${this.apiUrl}/superadmin/image`, formData, {
       responseType: 'text'
     });
   }
@@ -98,11 +98,11 @@ isLoggedIn(): boolean {
     
     // Si c'est un chemin qui commence par /
     if (avatarValue.startsWith('/')) {
-      return `http://localhost:8080${avatarValue}`;
+      return `http://localhost:8081${avatarValue}`;
     }
     
     // Si c'est juste un nom de fichier
-    return `${this.apiUrl}/image/${avatarValue}`;
+    return `${this.apiUrl}/superadmin/image/${avatarValue}`;
   }
 
   /**

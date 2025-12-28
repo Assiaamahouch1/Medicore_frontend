@@ -17,7 +17,7 @@ export interface Admin {
   providedIn: 'root'
 })
 export class AdminService {
-  private apiUrl = 'http://localhost:8080/admins'; // Adapter selon ton port
+  private apiUrl = 'http://localhost:8081/api/auth'; // Adapter selon ton port
 
   constructor(private http: HttpClient) {}
 
@@ -51,12 +51,13 @@ export class AdminService {
     });
   }
 
-  getAvatar(urlOrFilename: string): Observable<Blob> {
-  const url = urlOrFilename.startsWith('http') 
-    ? urlOrFilename 
-    : `${this.apiUrl}/image/${urlOrFilename}`;
+  getAvatar(avatarFilename: string): Observable<Blob> {
+    if (avatarFilename.startsWith('http')) {
+      return this.http.get(avatarFilename, { responseType: 'blob' });
+    }
     
-  return this.http.get(url, { responseType: 'blob' });
+    const url = `${this.apiUrl}/image/${avatarFilename}`;
+    return this.http.get(url, { responseType: 'blob' });
 }
 
 }

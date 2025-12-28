@@ -4,6 +4,7 @@ import { SidebarService } from '../../services/sidebar.service';
 import { NavigationEnd, Router, RouterModule } from '@angular/router';
 import { SafeHtmlPipe } from '../../pipe/safe-html.pipe';
 import { combineLatest, Subscription } from 'rxjs';
+import { AuthAdmin } from '../../../../services/auth.service';
 
 type NavItem = {
   name: string;
@@ -24,8 +25,17 @@ type NavItem = {
 })
 export class AppSidebarComponent {
 
+
   // Main nav items
   navItems: NavItem[] = [
+   {
+  name: "Dashboard",
+  icon: `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6">
+    <path stroke-linecap="round" stroke-linejoin="round" d="M3 3h7v7H3V3zM14 3h7v7h-7V3zM3 14h7v7H3v-7zM14 14h7v7h-7v-7z" />
+  </svg>`,
+  path: "/dashboard",
+},
+
     {
       name: "Admin",
       icon: `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
@@ -36,6 +46,7 @@ export class AppSidebarComponent {
     },
     
   ];
+  
 
   openSubmenu: string | null | number = null;
   subMenuHeights: { [key: string]: number } = {};
