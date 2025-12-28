@@ -35,16 +35,39 @@ export class AdminEditModalComponent {
   isLoading: boolean = false;
   errorMessage: string = '';
 
+  avatarDataUrl: string = '/images/user/default.png';
+  defaultAvatar = '/images/user/default.png';
+
   constructor(private adminService: AdminService) {}
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['admin'] && this.admin) {
-      // Copie les données de l'admin sélectionné
       this.editedAdmin = { ...this.admin };
-      this.previewUrl = this.admin.avatar || '/images/user/default.png';
+      this.loadAvatar();
       this.selectedFile = null;
       this.errorMessage = '';
     }
+  }
+  loadAvatar(): void {
+    if (!this.admin?.avatar) {
+      this.previewUrl = this.defaultAvatar;
+      return;
+    }
+
+    this.adminService.getAvatar(this.admin.avatar).subscribe({
+      next: (blob) => {
+        const reader = new FileReader();
+        reader.onload = () => {
+          this.previewUrl = reader.result as string;
+          console.log('✅ Avatar chargé pour le modal edit');
+        };
+        reader.readAsDataURL(blob);
+      },
+      error: (err) => {
+        console.error('❌ Erreur chargement avatar edit modal:', err);
+        this.previewUrl = this.defaultAvatar;
+      }
+    });
   }
 
   onAvatarChange(event: Event) {

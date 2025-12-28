@@ -82,7 +82,8 @@ export class SigninFormComponent {
           if(user.role=="ADMIN" || user.role=="SUPERADMIN")
          {
            this.router.navigate(['/dashboard']);
-         }else if(user.role=="MEDECIN"){
+         }
+         else if(user.role=="SECRETAIRE"){
           this.router.navigate(['/patients']);
          }
 
