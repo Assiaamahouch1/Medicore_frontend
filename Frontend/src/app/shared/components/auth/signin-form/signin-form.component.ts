@@ -82,7 +82,7 @@ export class SigninFormComponent {
           if(user.role=="ADMIN")
          {
            this.router.navigate(['/dashboard']);
-         }else if(user.role=="MEDECIN"){
+         }else if(user.role=="SECRETAIRE"){
           this.router.navigate(['/patients']);
          }
 

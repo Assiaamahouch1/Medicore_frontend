@@ -3,7 +3,7 @@
     <div class="flex items-start gap-6">
       <div class="w-20 h-20 overflow-hidden mr-8 border border-gray-200 rounded-full dark:border-gray-800 flex-shrink-0">
         <img 
-          [src]="user.avatar || '/images/user/avatar.jpg'" 
+          [src]="avatarDataUrl" 
           alt="user" 
           class="w-full h-full object-cover" 
         />
@@ -100,7 +100,7 @@
             <div class="flex justify-center mb-8">
               <div class="relative w-24 h-24">
                 <img
-                  [src]="user.avatar || '/images/user/avatar.jpg'"
+                  [src]="avatarDataUrl"
                   alt="Avatar"
                   class="w-full h-full rounded-full object-cover border border-gray-300 dark:border-gray-700"
                 />

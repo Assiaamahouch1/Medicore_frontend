@@ -74,7 +74,7 @@ isLoggedIn(): boolean {
   }
 
   updateCurrentAuth(id: number, superAdmin: Partial<AuthAdmin>): Observable<AuthAdmin> {
-    return this.http.put<AuthAdmin>(`${this.apiUrl}/${id}`, superAdmin);
+    return this.http.put<AuthAdmin>(`${this.apiUrl}/superadmin/${id}`, superAdmin);
   }
 
   uploadImage(id: number, file: File): Observable<string> {
@@ -82,7 +82,7 @@ isLoggedIn(): boolean {
     formData.append('file', file);
     formData.append('id', id.toString());
     
-    return this.http.put(`${this.apiUrl}/image`, formData, {
+    return this.http.put(`${this.apiUrl}/superadmin/image`, formData, {
       responseType: 'text'
     });
   }
@@ -102,7 +102,7 @@ isLoggedIn(): boolean {
     }
     
     // Si c'est juste un nom de fichier
-    return `${this.apiUrl}/image/${avatarValue}`;
+    return `${this.apiUrl}/superadmin/image/${avatarValue}`;
   }
 
   /**
