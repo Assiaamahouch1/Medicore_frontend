@@ -79,7 +79,7 @@ export class SigninFormComponent {
           this.user = { ...user };
           sessionStorage.setItem('role', user.role); // stocke 'SUPERADMIN' ou 'ADMIN'
           console.log('Role de l’utilisateur :', user.role);
-          if(user.role=="ADMIN")
+          if(user.role=="ADMIN" || user.role=="SUPERADMIN")
          {
            this.router.navigate(['/dashboard']);
          }else if(user.role=="MEDECIN"){

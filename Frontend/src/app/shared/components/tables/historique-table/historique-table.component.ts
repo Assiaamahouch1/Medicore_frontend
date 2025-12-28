@@ -1,7 +1,4 @@
-import { PatientShowModalComponent } from './../modals/patient-show-modal/patient-show-modal.component';
-import { PatientEditModalComponent } from './../modals/patient-edit-modal/patient-edit-modal.component';
-import { PatientDeleteModalComponent } from './../modals/patient-delete-modal/patient-delete-modal.component';
-import { PatientAddModalComponent } from './../modals/patient-add-modal/patient-add-modal.component';
+import { PatientRestoreModalComponent } from '../modals/patient-restore-modal/patient-restore-modal.component';
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -11,22 +8,19 @@ import { ModalService } from '../../../services/modal.service';
 import { PatientService , Patient } from '../../../../../services/patient.service';
 
 @Component({
-  selector: 'app-patient-table',
+  selector: 'app-historique-table',
   standalone: true,
   imports: [
     CommonModule,
     FormsModule,
     ButtonComponent,
     TableDropdownComponent,
-    PatientAddModalComponent,
-    PatientEditModalComponent,
-    PatientDeleteModalComponent,
-    PatientShowModalComponent
+    PatientRestoreModalComponent
   ],
-  templateUrl: './patient-table.component.html',
+  templateUrl: './historique-table.component.html',
   styles: ``
 })
-export class PatientTableComponent implements OnInit{
+export class HistoriqueTableComponent implements OnInit{
 
   transactionData: Patient[] = [];
   filteredData: Patient[] = [];
@@ -36,10 +30,9 @@ export class PatientTableComponent implements OnInit{
   currentPage = 1;
   itemsPerPage = 6;
 
-  isAddModalOpen = false;
-  isEditModalOpen = false;
-  isDeleteModalOpen = false;
-  isShowModalOpen = false;
+
+  isRestoreModalOpen = false;
+
 
   constructor(
     public modal: ModalService,
@@ -51,7 +44,7 @@ export class PatientTableComponent implements OnInit{
   }
 
   loadPatients(): void {
-    this.patientService.getAll().subscribe({
+    this.patientService.getAllNoActif().subscribe({
       next: (data: Patient[]) => {
         this.transactionData = data;
         this.filteredData = [...data];
@@ -88,44 +81,20 @@ export class PatientTableComponent implements OnInit{
     }
   }
 
-  openAddModal() { 
-    this.selectedPatient = null;
-    this.isAddModalOpen = true; 
-  }
-  closeAddModal() { 
-    this.isAddModalOpen = false;
-    this.loadPatients(); 
-  }
-
-  openEditModal(patient: Patient) { 
+  openRestoreModal(patient: Patient) { 
     this.selectedPatient = patient;
-    this.isEditModalOpen = true; 
+    this.isRestoreModalOpen = true; 
   }
-  closeEditModal() { 
-    this.isEditModalOpen = false;
-    this.selectedPatient = null;
-    this.loadPatients(); 
-  }
+ closeDeleteModal(restored: boolean = false) { 
+  this.isRestoreModalOpen = false;
+  this.selectedPatient = null;
 
-  openDeleteModal(patient: Patient) { 
-    this.selectedPatient = patient;
-    this.isDeleteModalOpen = true; 
+  if (restored) {
+    this.loadPatients(); // 🔄 reload automatique
   }
-  closeDeleteModal(deleted: boolean = false) { 
-    this.isDeleteModalOpen = false;
-    this.selectedPatient= null;
-    if (deleted) this.loadPatients(); 
-  }
+}
 
-  openShowModal(patient: Patient) { 
-    this.selectedPatient = patient;
-    this.isShowModalOpen = true; 
-  }
-  closeShowModal() { 
-    this.isShowModalOpen = false;
-    this.selectedPatient= null;
-  }
-
+ 
   handleFilter() {
     console.log('Filter clicked');
   }

@@ -1,0 +1,51 @@
+<app-modal
+  [isOpen]="isRestoreModalOpen"
+  (close)="closeRestoreModal()"
+  className="max-w-[500px] mx-auto my-10"
+>
+  <div class="relative w-full max-w-[500px] rounded-2xl bg-white p-8 shadow-xl dark:bg-gray-800 text-center">
+
+    <!-- Icône croix rouge -->
+    <div class="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-red-50">
+      <svg class="h-10 w-10 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+      </svg>
+    </div>
+
+    <!-- Titre -->
+    <h4 class="mb-3 text-2xl font-semibold text-gray-900 dark:text-white">
+      Are you sure?
+    </h4>
+
+    <!-- Message -->
+    <p class="mb-8 text-base text-gray-600 dark:text-gray-300">
+      Voulez-vous vraiment activer <strong>{{ patient?.prenom }} {{ patient?.nom }}</strong> ?
+      Cette action est irréversible.
+    </p>
+    <!-- Message d'erreur -->
+    <div *ngIf="errorMessage" class="mb-4 rounded-lg bg-red-50 p-3 text-sm text-red-800 dark:bg-red-900/20 dark:text-red-400">
+      {{ errorMessage }}
+    </div>
+
+    <!-- Boutons -->
+    <div class="flex justify-center gap-4">
+      <button
+        type="button"
+        (click)="closeRestoreModal()"
+        [disabled]="isLoading"
+        class="min-w-[120px] rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
+      >
+        Annuler
+      </button>
+
+      <button
+      type="button"
+      (click)="confirmRestore()"
+      [disabled]="isLoading"
+      class="min-w-[120px] rounded-lg bg-red-500 px-4 py-2.5 text-sm font-medium text-white hover:bg-red-600 disabled:opacity-50 disabled:cursor-not-allowed"
+    >
+     Restaurer
+    </button>
+    </div>
+  </div>
+</app-modal>
