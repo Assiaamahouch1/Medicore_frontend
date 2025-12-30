@@ -109,12 +109,19 @@ export class CabinetTableComponent implements OnInit {
 
   loadCabinets(): void {
     this.cabinetService.getAllCabinets().subscribe({
-      next: (data: Cabinet[]) => {
-        console.log('Cabinets chargés:', data);
-        this.cabinetData = data;
+      next: (response: any) => {
+        console.log('Cabinets chargés:', response);
+        
+        // Le backend retourne un objet Page, extraire le content
+        const rawData = response.content ?? response ?? [];
+        
+        // Normaliser les données (le backend peut retourner camelCase ou snake_case)
+        this.cabinetData = Array.isArray(rawData) 
+          ? rawData.map((c: any) => this.normalizeCabinet(c))
+          : [];
         this.filteredData = [...this.cabinetData];
         
-        data.forEach(cabinet => {
+        this.cabinetData.forEach(cabinet => {
           if (cabinet.id) {
             this.loadCabinetLogo(cabinet.id, cabinet.logo);
           }
@@ -122,8 +129,25 @@ export class CabinetTableComponent implements OnInit {
       },
       error: (error: any) => {
         console.error('Erreur chargement cabinets:', error);
+        this.cabinetData = [];
+        this.filteredData = [];
       }
     });
+  }
+
+  // Normalise les champs du cabinet (supporte camelCase et snake_case du backend)
+  private normalizeCabinet(c: any): Cabinet {
+    return {
+      id: c.id,
+      logo: c.logo,
+      nom: c.nom,
+      specialite: c.specialite,
+      adresse: c.adresse,
+      tel: c.tel,
+      // Gère les deux formats : camelCase (Spring) et snake_case
+      service_actif: c.service_actif ?? c.serviceActif ?? false,
+      date_expiration_service: c.date_expiration_service ?? c.dateExpirationService ?? null
+    };
   }
 
   loadCabinetLogo(cabinetId: number, logoFilename?: string): void {

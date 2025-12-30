@@ -23,7 +23,7 @@
       <div class="mb-6 p-4 rounded-xl bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
         <div class="flex items-center justify-between mb-4">
           <h5 class="text-lg font-medium text-gray-800 dark:text-white/90">
-            {{ cabinet?.nom }}
+            {{ normalizedCabinet?.nom }}
           </h5>
           <span 
             class="inline-flex items-center px-3 py-1.5 rounded-full text-sm font-medium"
@@ -31,9 +31,9 @@
           >
             <span 
               class="w-2 h-2 rounded-full mr-2"
-              [ngClass]="cabinet?.service_actif ? 'bg-green-500' : 'bg-gray-400'"
+              [ngClass]="isServiceActive() ? 'bg-green-500' : 'bg-gray-400'"
             ></span>
-            {{ cabinet?.service_actif ? 'Actif' : 'Inactif' }}
+            {{ isServiceActive() ? 'Actif' : 'Inactif' }}
           </span>
         </div>
         
@@ -67,11 +67,26 @@
       <!-- Actions activation/désactivation -->
       <div class="mb-6">
         <h6 class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">Action rapide</h6>
+        
+        <!-- Avertissement si expiration non définie -->
+        <div *ngIf="!isServiceActive() && !canActivate()" class="mb-3 p-3 rounded-lg bg-amber-50 border border-amber-200 dark:bg-amber-900/20 dark:border-amber-800">
+          <div class="flex items-start gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-amber-500 mt-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+              <line x1="12" y1="9" x2="12" y2="13"/>
+              <line x1="12" y1="17" x2="12.01" y2="17"/>
+            </svg>
+            <p class="text-sm text-amber-700 dark:text-amber-400">
+              Pour activer le service, veuillez d'abord <strong>renouveler l'abonnement</strong> ou <strong>définir une date d'expiration</strong> future ci-dessous.
+            </p>
+          </div>
+        </div>
+
         <div class="flex gap-3">
           <button
-            *ngIf="!cabinet?.service_actif"
+            *ngIf="!isServiceActive()"
             (click)="activateService()"
-            [disabled]="isLoading"
+            [disabled]="isLoading || !canActivate()"
             class="flex-1 inline-flex items-center justify-center gap-2 rounded-lg bg-green-600 px-4 py-3 text-sm font-medium text-white shadow-sm hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -82,7 +97,7 @@
           </button>
           
           <button
-            *ngIf="cabinet?.service_actif"
+            *ngIf="isServiceActive()"
             (click)="deactivateService()"
             [disabled]="isLoading"
             class="flex-1 inline-flex items-center justify-center gap-2 rounded-lg bg-orange-500 px-4 py-3 text-sm font-medium text-white shadow-sm hover:bg-orange-600 disabled:opacity-50 disabled:cursor-not-allowed"

@@ -18,6 +18,9 @@ export class CabinetStatusModalComponent implements OnChanges {
   @Input() cabinet: Cabinet | null = null;
   @Output() close = new EventEmitter<boolean>();
 
+  // Cabinet normalisé (gère camelCase/snake_case)
+  normalizedCabinet: Cabinet | null = null;
+
   subscriptionStatus: SubscriptionStatus | null = null;
   loadingStatus: boolean = false;
   isLoading: boolean = false;
@@ -30,10 +33,35 @@ export class CabinetStatusModalComponent implements OnChanges {
   constructor(private cabinetService: CabinetService) {}
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes['cabinet'] && this.cabinet?.id) {
-      this.loadSubscriptionStatus(this.cabinet.id);
+    if (changes['cabinet'] && this.cabinet) {
+      // Normaliser le cabinet pour gérer camelCase/snake_case
+      this.normalizedCabinet = this.normalizeCabinet(this.cabinet);
+      
+      if (this.normalizedCabinet.id) {
+        this.loadSubscriptionStatus(this.normalizedCabinet.id);
+      }
       this.setDefaultExpirationDate();
     }
+  }
+
+  // Normalise les champs du cabinet
+  private normalizeCabinet(c: any): Cabinet {
+    return {
+      id: c.id,
+      logo: c.logo,
+      nom: c.nom,
+      specialite: c.specialite,
+      adresse: c.adresse,
+      tel: c.tel,
+      service_actif: c.service_actif ?? c.serviceActif ?? false,
+      date_expiration_service: c.date_expiration_service ?? c.dateExpirationService ?? null
+    };
+  }
+
+  // Vérifie si l'activation est possible
+  canActivate(): boolean {
+    if (!this.subscriptionStatus) return false;
+    return !this.subscriptionStatus.expired && this.subscriptionStatus.daysRemaining > 0;
   }
 
   setDefaultExpirationDate() {
@@ -62,30 +90,41 @@ export class CabinetStatusModalComponent implements OnChanges {
   }
 
   activateService() {
-    if (!this.cabinet?.id) {
+    if (!this.normalizedCabinet?.id) {
       this.errorMessage = 'ID du cabinet introuvable';
+      return;
+    }
+
+    // Vérifier si l'activation est possible
+    if (!this.canActivate()) {
+      this.errorMessage = 'Veuillez d\'abord définir une date d\'expiration future avant d\'activer le service.';
       return;
     }
 
     this.isLoading = true;
     this.errorMessage = '';
 
-    this.cabinetService.activateCabinet(this.cabinet.id).subscribe({
+    this.cabinetService.activateCabinet(this.normalizedCabinet.id).subscribe({
       next: () => {
-        console.log('Cabinet activé:', this.cabinet?.nom);
+        console.log('Cabinet activé:', this.normalizedCabinet?.nom);
         this.isLoading = false;
         this.close.emit(true);
       },
       error: (error) => {
         console.error('Erreur activation cabinet:', error);
-        this.errorMessage = error.error?.message || 'Erreur lors de l\'activation du cabinet';
+        // Message d'erreur plus explicite
+        if (error.status === 400) {
+          this.errorMessage = 'Impossible d\'activer : veuillez d\'abord définir ou renouveler la date d\'expiration.';
+        } else {
+          this.errorMessage = error.error?.message || 'Erreur lors de l\'activation du cabinet';
+        }
         this.isLoading = false;
       }
     });
   }
 
   deactivateService() {
-    if (!this.cabinet?.id) {
+    if (!this.normalizedCabinet?.id) {
       this.errorMessage = 'ID du cabinet introuvable';
       return;
     }
@@ -93,9 +132,9 @@ export class CabinetStatusModalComponent implements OnChanges {
     this.isLoading = true;
     this.errorMessage = '';
 
-    this.cabinetService.deactivateCabinet(this.cabinet.id).subscribe({
+    this.cabinetService.deactivateCabinet(this.normalizedCabinet.id).subscribe({
       next: () => {
-        console.log('Cabinet désactivé:', this.cabinet?.nom);
+        console.log('Cabinet désactivé:', this.normalizedCabinet?.nom);
         this.isLoading = false;
         this.close.emit(true);
       },
@@ -108,7 +147,7 @@ export class CabinetStatusModalComponent implements OnChanges {
   }
 
   renewSubscription() {
-    if (!this.cabinet?.id) {
+    if (!this.normalizedCabinet?.id) {
       this.errorMessage = 'ID du cabinet introuvable';
       return;
     }
@@ -116,7 +155,7 @@ export class CabinetStatusModalComponent implements OnChanges {
     this.isLoading = true;
     this.errorMessage = '';
 
-    this.cabinetService.renewSubscription(this.cabinet.id, this.renewMonths).subscribe({
+    this.cabinetService.renewSubscription(this.normalizedCabinet.id, this.renewMonths).subscribe({
       next: () => {
         console.log('Abonnement renouvelé:', this.renewMonths, 'mois');
         this.isLoading = false;
@@ -131,7 +170,7 @@ export class CabinetStatusModalComponent implements OnChanges {
   }
 
   setExpirationDate() {
-    if (!this.cabinet?.id) {
+    if (!this.normalizedCabinet?.id) {
       this.errorMessage = 'ID du cabinet introuvable';
       return;
     }
@@ -144,7 +183,7 @@ export class CabinetStatusModalComponent implements OnChanges {
     this.isLoading = true;
     this.errorMessage = '';
 
-    this.cabinetService.setExpiration(this.cabinet.id, this.newExpirationDate).subscribe({
+    this.cabinetService.setExpiration(this.normalizedCabinet.id, this.newExpirationDate).subscribe({
       next: () => {
         console.log('Date d\'expiration définie:', this.newExpirationDate);
         this.isLoading = false;
@@ -159,10 +198,14 @@ export class CabinetStatusModalComponent implements OnChanges {
   }
 
   getStatusBadgeClass(): string {
-    if (this.cabinet?.service_actif) {
+    if (this.normalizedCabinet?.service_actif) {
       return 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400';
     }
     return 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300';
+  }
+
+  isServiceActive(): boolean {
+    return this.normalizedCabinet?.service_actif ?? false;
   }
 
   getExpirationClass(): string {
