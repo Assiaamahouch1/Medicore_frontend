@@ -16,6 +16,18 @@ export interface AuthAdmin {
   cabinetId?: number;
 }
 
+// Pour l'enregistrement d'un nouveau utilisateur (médecin, secrétaire, etc.)
+export interface RegisterRequest {
+  username: string;
+  password: string;
+  nom: string;
+  prenom: string;
+  numTel?: string;
+  signature?: string;
+  role: 'ADMIN' | 'MEDECIN' | 'SECRETAIRE';
+  cabinetId?: number;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -33,6 +45,13 @@ export class AuthService {
     };
 
     return this.http.post<string>(`${this.apiUrl}/login`, payload, {
+      responseType: 'text' as 'json'
+    });
+  }
+
+  // Enregistrer un nouvel utilisateur (médecin, secrétaire, etc.)
+  register(request: RegisterRequest): Observable<string> {
+    return this.http.post<string>(`${this.apiUrl}/register`, request, {
       responseType: 'text' as 'json'
     });
   }
