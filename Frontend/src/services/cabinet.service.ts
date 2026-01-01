@@ -107,4 +107,11 @@ export class CabinetService {
     }
     return this.http.get(`${this.apiUrl}/logo/${logoFilename}`, { responseType: 'blob' });
   }
+
+  // Récupérer les cabinets qui expirent bientôt (alertes admin)
+  getExpiringCabinets(days: number = 7): Observable<Cabinet[]> {
+    return this.http.get<Cabinet[]>(`${this.apiUrl}/alerts/expiring`, {
+      params: new HttpParams().set('days', days.toString())
+    });
+  }
 }
