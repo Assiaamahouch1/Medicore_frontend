@@ -1,0 +1,101 @@
+<app-modal
+  [isOpen]="isEditModalOpen"
+  (close)="closeEditModal()"
+  className="max-w-[600px] m-4"
+>
+  <div class="no-scrollbar relative w-full max-w-[600px] overflow-y-auto rounded-3xl bg-white p-6 dark:bg-gray-900 lg:p-10">
+    <div class="mb-6">
+      <h4 class="mb-2 text-2xl font-semibold text-gray-800 dark:text-white/90">
+        Modifier le rendez-vous
+      </h4>
+      <p class="text-sm text-gray-500 dark:text-gray-400">
+        Modifiez la date, l'heure, le motif ou les notes du rendez-vous.
+      </p>
+    </div>
+
+    <!-- Message d'erreur -->
+    <div *ngIf="errorMessage" class="mb-4 rounded-lg bg-red-50 p-4 text-sm text-red-800 dark:bg-red-900/20 dark:text-red-400">
+      {{ errorMessage }}
+    </div>
+
+    <form (ngSubmit)="handleSave()" class="space-y-6">
+      <!-- Date -->
+      <div>
+        <app-label>Date du rendez-vous *</app-label>
+        <input
+          type="date"
+          [(ngModel)]="editedRendezvous.dateRdv"
+          name="dateRdv"
+          class="mt-1 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 
+                 focus:border-brand-300 focus:outline-none focus:ring-2 focus:ring-brand-500/10
+                 dark:border-gray-700 dark:text-white/90 dark:focus:border-brand-800"
+          required
+        />
+      </div>
+
+      <!-- Heure -->
+      <div>
+        <app-label>Heure *</app-label>
+        <input
+          type="text"
+          [(ngModel)]="editedRendezvous.heureRdv"
+          name="heureRdv"
+          placeholder="14:30"
+          class="mt-1 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 
+                 focus:border-brand-300 focus:outline-none focus:ring-2 focus:ring-brand-500/10
+                 dark:border-gray-700 dark:text-white/90 dark:focus:border-brand-800"
+          required
+        />
+      </div>
+
+      <!-- Motif -->
+      <div>
+        <app-label>Motif</app-label>
+        <input
+          type="text"
+          [(ngModel)]="editedRendezvous.motif"
+          name="motif"
+          placeholder="Consultation de suivi, contrôle, etc."
+          class="mt-1 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 
+                 focus:border-brand-300 focus:outline-none focus:ring-2 focus:ring-brand-500/10
+                 dark:border-gray-700 dark:text-white/90 dark:focus:border-brand-800"
+        />
+      </div>
+
+      <!-- Notes -->
+      <div>
+        <app-label>Notes</app-label>
+        <textarea
+          [(ngModel)]="editedRendezvous.notes"
+          name="notes"
+          rows="4"
+          placeholder="Informations supplémentaires..."
+          class="mt-1 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 
+                 focus:border-brand-300 focus:outline-none focus:ring-2 focus:ring-brand-500/10
+                 dark:border-gray-700 dark:text-white/90 dark:focus:border-brand-800 resize-none"
+        ></textarea>
+      </div>
+
+      <!-- Boutons -->
+      <div class="flex justify-end gap-3 pt-4 border-t border-gray-200 dark:border-white/10">
+        <app-button 
+          size="sm" 
+          variant="outline" 
+          type="button"
+          (btnClick)="closeEditModal()"
+        >
+          Annuler
+        </app-button>
+
+        <button 
+          type="submit"
+          [disabled]="isLoading"
+          class="inline-flex items-center justify-center gap-2 rounded-lg bg-brand-700 px-5 py-2.5 text-sm font-medium text-white shadow-sm hover:bg-brand-800 disabled:opacity-50 disabled:cursor-not-allowed transition"
+        >
+          <span *ngIf="!isLoading">Enregistrer les modifications</span>
+          <span *ngIf="isLoading">Enregistrement...</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</app-modal>

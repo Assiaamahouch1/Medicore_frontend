@@ -66,6 +66,12 @@ export const routes: Routes = [
         canActivate: [AuthGuard],
         title: 'Angular Historique | TailAdmin'
       },
+       {
+        path: 'rendezVous',
+        component: RendezVousComponent,
+        canActivate: [AuthGuard],
+        title: 'AngularRendez_Vous | TailAdmin'
+      },
    
     ]
   },
