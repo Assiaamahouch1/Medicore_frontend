@@ -49,7 +49,6 @@ export class UserInfoCardSecComponent {
     this.authService.getCurrentAuth().subscribe({
       next: (user) => {
         console.log('👤 User reçu du backend:', user);
-        console.log('Avatar brut:', user.avatar);
         
         this.user = {
           ...user,
@@ -59,14 +58,14 @@ export class UserInfoCardSecComponent {
             : this.defaultAvatar
         };
         
-        console.log('Avatar URL finale:', this.user.avatar);
+        
         
         this.userBackup = { ...this.user };
         this.loading = false;
       },
       error: (err) => {
         console.error('Erreur chargement:', err);
-        this.user.avatar = this.defaultAvatar;
+        
         this.loading = false;
       }
     });

@@ -12,6 +12,9 @@ import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { AppLayoutSecrComponent } from './shared/layout/app-layout-secr/app-layout-secr.component';
 import { PatientComponent } from './pages/secretaire/patient/patient.component';
 import { RendezVousComponent } from './pages/secretaire/rendez-vous/rendez-vous.component';
+import { HistoriqueComponent } from './pages/secretaire/historique/historique.component';
+import { FacturationComponent } from './pages/secretaire/facturation/facturation.component';
+
 
 export const routes: Routes = [
  
@@ -58,6 +61,18 @@ export const routes: Routes = [
         component: ProfilesecComponent,
         canActivate: [AuthGuard],
         title: 'Angular Profile | TailAdmin'
+      },
+       {
+        path: 'historique',
+        component: HistoriqueComponent,
+        canActivate: [AuthGuard],
+        title: 'Angular Historique | TailAdmin'
+      },
+      {
+        path: 'factures',
+        component: FacturationComponent,
+        canActivate: [AuthGuard],
+        title: 'Angular Dashboard | TailAdmin'
       },
    
     ]

@@ -1,0 +1,89 @@
+<app-modal
+  [isOpen]="isAddModalOpen"
+  (close)="closeAddModal()"
+  className="max-w-[700px] m-4"
+>
+  <div class="no-scrollbar relative w-full max-w-[700px] overflow-y-auto rounded-3xl bg-white p-4 dark:bg-gray-900 lg:p-11">
+    <div class="px-2 pr-14">
+      <h4 class="mb-2 text-2xl font-semibold text-gray-800 dark:text-white/90">
+        Ajouter une facture
+      </h4>
+      <p class="mb-6 text-sm text-gray-500 dark:text-gray-400 lg:mb-7">
+        Remplissez les informations pour créer un nouvel facture.
+      </p>
+    </div>
+
+    <!-- Message d'erreur -->
+    <div *ngIf="errorMessage" class="mx-2 mb-4 rounded-lg bg-red-50 p-4 text-sm text-red-800 dark:bg-red-900/20 dark:text-red-400">
+      {{ errorMessage }}
+    </div>
+
+    <form class="flex flex-col" (ngSubmit)="handleSave()">
+      <div class="custom-scrollbar h-[370px] overflow-y-auto px-2 pb-3">
+        <div>
+          <h5 class="mb-5 text-lg font-medium text-gray-800 dark:text-white/90 lg:mb-6">
+            Informations personnelles
+          </h5>
+          
+        
+
+          <div class="grid grid-cols-1 gap-x-6 gap-y-5 lg:grid-cols-2">
+            <div class="col-span-2 lg:col-span-1">
+              <app-label>Montant</app-label>
+              <input
+                type="number"
+                [(ngModel)]="facture.montant"
+                name="montant"
+                placeholder="Entrez le montant"
+                class="w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 
+                       focus:border-brand-300 focus:outline-none focus:ring-2 focus:ring-brand-500/10
+                       dark:border-gray-700 dark:text-white/90 dark:focus:border-brand-800 placeholder-gray-300 dark:placeholder-gray-500"
+                required
+              />
+            </div>
+
+            <div class="col-span-2 lg:col-span-1">
+              <app-label>Mode de Paiement</app-label>
+              <select
+                [(ngModel)]="facture.modePaiement"
+                name="modePaiement"
+                class="w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 
+                      focus:border-brand-300 focus:outline-none focus:ring-2 focus:ring-brand-500/10
+                      dark:border-gray-700 dark:text-white/90 dark:focus:border-brand-800 placeholder-gray-300 dark:placeholder-gray-500"
+                required
+              >
+                <option value="" disabled>Choisissez un mode</option>
+                <option value="ESPECES">ESPECES</option>
+                <option value="CARTE">CARTE</option>
+                <option value="ASSURANCE">ASSURANCE</option>
+              </select>
+            </div>
+
+
+
+          </div>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-3 px-2 mt-6 lg:justify-end">
+  <app-button 
+    size="sm" 
+    variant="outline" 
+    type="button"
+    (btnClick)="closeAddModal()"
+  >
+    Annuler
+  </app-button>
+  
+  <button 
+    type="submit"
+    [disabled]="isLoading"
+    class="inline-flex items-center justify-center gap-2 rounded-lg bg-brand-700 px-4 py-2.5 text-sm font-medium text-white shadow-sm hover:bg-green-800 disabled:opacity-50 disabled:cursor-not-allowed"
+    >
+      <span *ngIf="!isLoading">Enregistrer</span>
+      <span *ngIf="isLoading">Enregistrement...</span>
+    </button>
+  </div>
+    </form>
+  </div>
+</app-modal>
