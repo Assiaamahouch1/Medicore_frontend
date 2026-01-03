@@ -489,6 +489,7 @@ span.flatpickr-weekday,
   @apply dark:!bg-gray-dark;
 }
 
+
 .flatpickr-innerContainer {
   @apply !border-b-0;
 }

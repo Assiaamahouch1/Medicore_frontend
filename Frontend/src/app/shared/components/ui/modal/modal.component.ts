@@ -53,9 +53,11 @@ export class ModalComponent {
   }
 
   @HostListener('document:keydown.escape', ['$event'])
-  onEscape(event: KeyboardEvent) {
+  onEscape(event: Event) {
+    const keyboardEvent = event as KeyboardEvent; // cast
     if (this.isOpen) {
       this.close.emit();
     }
   }
+
 }

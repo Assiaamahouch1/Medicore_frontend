@@ -1,0 +1,70 @@
+<div class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
+  <div class="relative w-full max-w-lg rounded-2xl bg-white dark:bg-gray-900 shadow-2xl p-8">
+
+    <!-- Header -->
+    <div class="text-center mb-8">
+      <h2 class="text-3xl font-extrabold text-green-700 dark:text-green-400">
+        Fiche de Rendez-vous
+      </h2>
+      <p class="text-sm text-gray-500 dark:text-gray-400">
+        Cabinet médical
+      </p>
+    </div>
+
+    <!-- Content -->
+    <div class="space-y-6 text-base">
+
+      <div class="flex justify-between border-b pb-3">
+        <span class="font-semibold text-gray-500">👤 Patient</span>
+        <span class="font-bold">
+          {{ getPatientName(rendezvous.patientId) }}
+        </span>
+      </div>
+
+      <div class="flex justify-between border-b pb-3">
+        <span class="font-semibold text-gray-500">📅 Date</span>
+        <span>
+          {{ rendezvous.dateRdv | date:'fullDate':'':'fr' }}
+        </span>
+      </div>
+
+      <div class="flex justify-between border-b pb-3">
+        <span class="font-semibold text-gray-500">⏰ Heure</span>
+        <span>{{ rendezvous.heureRdv }}</span>
+      </div>
+
+      <div class="flex justify-between items-center">
+        <span class="font-semibold text-gray-500">📌 Statut</span>
+        <span class="px-4 py-1 rounded-full text-xs font-bold uppercase"
+              [ngClass]="{
+                'bg-green-100 text-green-800': rendezvous.statut === 'CONFIRME',
+                'bg-red-100 text-red-800': rendezvous.statut === 'ANNULE',
+                'bg-yellow-100 text-yellow-800': rendezvous.statut === 'EN_ATTENTE',
+                'bg-gray-200 text-gray-800': rendezvous.statut === 'HISTORIQUE'
+              }">
+          {{ rendezvous.statut }}
+        </span>
+      </div>
+
+      <div *ngIf="rendezvous.notes" class="mt-6">
+        <span class="font-semibold text-gray-500">📝 Notes</span>
+        <div class="mt-2 p-4 rounded-xl bg-gray-50 dark:bg-gray-800 text-gray-700 dark:text-gray-300 whitespace-pre-wrap">
+          {{ rendezvous.notes }}
+        </div>
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="mt-10 flex justify-between gap-4">
+      <button (click)="close.emit()"
+              class="w-1/2 py-3 rounded-xl border border-gray-300 text-gray-700 hover:bg-gray-100 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-800">
+        Annuler
+      </button>
+
+      <button (click)="printPDF()"
+              class="w-1/2 py-3 rounded-xl bg-green-700 text-white font-semibold hover:bg-green-800 flex items-center justify-center gap-2">
+        📄 Générer le PDF
+      </button>
+    </div>
+  </div>
+</div>

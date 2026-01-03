@@ -1,124 +1,148 @@
-import { Routes } from '@angular/router';
-import { EcommerceComponent } from './pages/dashboard/ecommerce/ecommerce.component';
+import { ProfilesecComponent } from './pages/secretaire/profilesec/profilesec.component';
+import { ProfileAdminComponent } from './pages/admin/profileadmin/profileadmin.component';
+import { AppLayoutMedcComponent } from './shared/layout/app-layout-medc/app-layout-medc.component';
+import { DashboardMedComponent } from './pages/Medecin/dashboard-med/dashboard-med.component';
+import { Routes, CanActivate } from '@angular/router';
 import { ProfileComponent } from './pages/profile/profile.component';
-import { FormElementsComponent } from './pages/forms/form-elements/form-elements.component';
-import { BasicTablesComponent } from './pages/tables/basic-tables/basic-tables.component';
-import { BlankComponent } from './pages/blank/blank.component';
+import { BasicTablesComponent } from './pages/admin/admin.component';
 import { NotFoundComponent } from './pages/other-page/not-found/not-found.component';
 import { AppLayoutComponent } from './shared/layout/app-layout/app-layout.component';
-import { InvoicesComponent } from './pages/invoices/invoices.component';
-import { LineChartComponent } from './pages/charts/line-chart/line-chart.component';
-import { BarChartComponent } from './pages/charts/bar-chart/bar-chart.component';
-import { AlertsComponent } from './pages/ui-elements/alerts/alerts.component';
-import { AvatarElementComponent } from './pages/ui-elements/avatar-element/avatar-element.component';
-import { BadgesComponent } from './pages/ui-elements/badges/badges.component';
-import { ButtonsComponent } from './pages/ui-elements/buttons/buttons.component';
-import { ImagesComponent } from './pages/ui-elements/images/images.component';
-import { VideosComponent } from './pages/ui-elements/videos/videos.component';
 import { SignInComponent } from './pages/auth-pages/sign-in/sign-in.component';
-import { SignUpComponent } from './pages/auth-pages/sign-up/sign-up.component';
-import { CalenderComponent } from './pages/calender/calender.component';
+import { ForgotComponent } from './pages/auth-pages/forgot-password/forgot-password.component';
+import { ResetComponent } from './pages/auth-pages/reset-password/reset-password.component';
+import { AuthGuard } from './guard/authGuard.component';
+import { DashboardComponent } from './pages/dashboard/dashboard.component';
+import { DashboardAdminComponent } from './pages/admin/dashboard/dashboard.component';
+
+import { AppLayoutSecrComponent } from './shared/layout/app-layout-secr/app-layout-secr.component';
+import { PatientComponent } from './pages/secretaire/patient/patient.component';
+import { RendezVousComponent } from './pages/secretaire/rendez-vous/rendez-vous.component';
+import { HistoriqueComponent } from './pages/secretaire/historique/historique.component';
+import { FacturationComponent } from './pages/secretaire/facturation/facturation.component';
+import { AppLayoutAdminComponent } from './shared/layout/app-layout-admin/app-layout-admin.component';
+
 
 export const routes: Routes = [
+ 
   {
-    path:'',
-    component:AppLayoutComponent,
-    children:[
+    path: '',
+    component: AppLayoutComponent,
+    children: [
+      { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
       {
-        path: '',
-        component: EcommerceComponent,
-        pathMatch: 'full',
-        title:
-          'Angular Ecommerce Dashboard | TailAdmin - Angular Admin Dashboard Template',
+        path: 'dashboard',
+        component: DashboardComponent,
+        canActivate: [AuthGuard],
+        title: 'Angular Dashboard | TailAdmin'
       },
       {
-        path:'calendar',
-        component:CalenderComponent,
-        title:'Angular Calender | TailAdmin - Angular Admin Dashboard Template'
+        path: 'profile',
+        component: ProfileComponent,
+        canActivate: [AuthGuard],
+        title: 'Angular Profile | TailAdmin'
       },
       {
-        path:'profile',
-        component:ProfileComponent,
-        title:'Angular Profile Dashboard | TailAdmin - Angular Admin Dashboard Template'
+        path: 'admins',
+        component: BasicTablesComponent,
+        canActivate: [AuthGuard],
+        title: 'Angular Admins | TailAdmin'
       },
+       // Place la feature Cabinets sous le layout Admin
       {
-        path:'form-elements',
-        component:FormElementsComponent,
-        title:'Angular Form Elements Dashboard | TailAdmin - Angular Admin Dashboard Template'
-      },
-      {
-        path:'basic-tables',
-        component:BasicTablesComponent,
-        title:'Angular Basic Tables Dashboard | TailAdmin - Angular Admin Dashboard Template'
-      },
-      {
-        path:'blank',
-        component:BlankComponent,
-        title:'Angular Blank Dashboard | TailAdmin - Angular Admin Dashboard Template'
-      },
-      // support tickets
-      {
-        path:'invoice',
-        component:InvoicesComponent,
-        title:'Angular Invoice Details Dashboard | TailAdmin - Angular Admin Dashboard Template'
-      },
-      {
-        path:'line-chart',
-        component:LineChartComponent,
-        title:'Angular Line Chart Dashboard | TailAdmin - Angular Admin Dashboard Template'
-      },
-      {
-        path:'bar-chart',
-        component:BarChartComponent,
-        title:'Angular Bar Chart Dashboard | TailAdmin - Angular Admin Dashboard Template'
-      },
-      {
-        path:'alerts',
-        component:AlertsComponent,
-        title:'Angular Alerts Dashboard | TailAdmin - Angular Admin Dashboard Template'
-      },
-      {
-        path:'avatars',
-        component:AvatarElementComponent,
-        title:'Angular Avatars Dashboard | TailAdmin - Angular Admin Dashboard Template'
-      },
-      {
-        path:'badge',
-        component:BadgesComponent,
-        title:'Angular Badges Dashboard | TailAdmin - Angular Admin Dashboard Template'
-      },
-      {
-        path:'buttons',
-        component:ButtonsComponent,
-        title:'Angular Buttons Dashboard | TailAdmin - Angular Admin Dashboard Template'
-      },
-      {
-        path:'images',
-        component:ImagesComponent,
-        title:'Angular Images Dashboard | TailAdmin - Angular Admin Dashboard Template'
-      },
-      {
-        path:'videos',
-        component:VideosComponent,
-        title:'Angular Videos Dashboard | TailAdmin - Angular Admin Dashboard Template'
+        path: 'admin/cabinets',
+        loadChildren: () =>
+          import('./pages/admin/cabinets/cabinets.module').then((m) => m.CabinetsModule),
       },
     ]
   },
-  // auth pages
-  {
-    path:'signin',
-    component:SignInComponent,
-    title:'Angular Sign In Dashboard | TailAdmin - Angular Admin Dashboard Template'
+
+
+   {
+    path: '',
+    component: AppLayoutSecrComponent,
+    children: [
+      { path: '', redirectTo: 'patient', pathMatch: 'full' },
+      {
+        path: 'patients',
+        component: PatientComponent,
+        canActivate: [AuthGuard],
+        title: 'Angular Dashboard | TailAdmin'
+      },
+       {
+        path: 'profilesec',
+        component: ProfilesecComponent,
+        canActivate: [AuthGuard],
+        title: 'Angular Profile | TailAdmin'
+      },
+       {
+        path: 'historique',
+        component: HistoriqueComponent,
+        canActivate: [AuthGuard],
+        title: 'Angular Historique | TailAdmin'
+      },
+      {
+        path: 'factures',
+        component: FacturationComponent,
+        canActivate: [AuthGuard],
+        title: 'Angular Dashboard | TailAdmin'
+      },
+      {
+        path: 'rendezVous',
+        component: RendezVousComponent,
+        canActivate: [AuthGuard],
+        title: 'AngularRendez_Vous | TailAdmin'
+      },
+   
+    ]
   },
+
+
   {
-    path:'signup',
-    component:SignUpComponent,
-    title:'Angular Sign Up Dashboard | TailAdmin - Angular Admin Dashboard Template'
+    path: '',
+    component: AppLayoutAdminComponent,
+    children: [
+      { path: '', redirectTo: 'dashboardadmin', pathMatch: 'full' },
+      {
+        path: 'dashboardadmin',
+        component: DashboardAdminComponent,
+        canActivate: [AuthGuard],
+        title: 'Angular Dashboard | TailAdmin'
+      },
+       {
+        path: 'profileadmin',
+        component: ProfileAdminComponent,
+        canActivate: [AuthGuard],
+        title: 'Angular Profile | TailAdmin'
+
+      },
+   {
+        path: 'admin/cabinets',
+        loadChildren: () =>
+          import('./pages/admin/cabinets/cabinets.module').then((m) => m.CabinetsModule),
+      },
+    ]
   },
-  // error pages
-  {
-    path:'**',
-    component:NotFoundComponent,
-    title:'Angular NotFound Dashboard | TailAdmin - Angular Admin Dashboard Template'
+   {
+    path: '',
+    component: AppLayoutMedcComponent,
+    children: [
+      { path: '', redirectTo: 'dashboardmed', pathMatch: 'full' },
+      {
+        path: 'dashboardmed',
+        component: DashboardMedComponent,
+        canActivate: [AuthGuard],
+        title: 'Angular Dashboard | TailAdmin'
+      },
+      
+   
+    ]
+    
   },
+ 
+  { path: 'signin', component: SignInComponent, title: 'Sign In | TailAdmin' },
+  { path: 'forgot-password', component: ForgotComponent },
+  { path: 'reset-password/:token', component: ResetComponent },
+
+  { path: '**', component: NotFoundComponent, title: '404 Not Found' },
+  
 ];
