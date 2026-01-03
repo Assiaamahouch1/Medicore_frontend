@@ -1,4 +1,6 @@
 import { ProfilesecComponent } from './pages/secretaire/profilesec/profilesec.component';
+import { ProfileAdminComponent } from './pages/admin/profileadmin/profileadmin.component';
+
 import { Routes, CanActivate } from '@angular/router';
 import { ProfileComponent } from './pages/profile/profile.component';
 import { BasicTablesComponent } from './pages/admin/admin.component';
@@ -9,11 +11,14 @@ import { ForgotComponent } from './pages/auth-pages/forgot-password/forgot-passw
 import { ResetComponent } from './pages/auth-pages/reset-password/reset-password.component';
 import { AuthGuard } from './guard/authGuard.component';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
+import { DashboardAdminComponent } from './pages/admin/dashboard/dashboard.component';
+
 import { AppLayoutSecrComponent } from './shared/layout/app-layout-secr/app-layout-secr.component';
 import { PatientComponent } from './pages/secretaire/patient/patient.component';
 import { RendezVousComponent } from './pages/secretaire/rendez-vous/rendez-vous.component';
 import { HistoriqueComponent } from './pages/secretaire/historique/historique.component';
 import { FacturationComponent } from './pages/secretaire/facturation/facturation.component';
+import { AppLayoutAdminComponent } from './shared/layout/app-layout-admin/app-layout-admin.component';
 
 
 export const routes: Routes = [
@@ -73,6 +78,28 @@ export const routes: Routes = [
         component: FacturationComponent,
         canActivate: [AuthGuard],
         title: 'Angular Dashboard | TailAdmin'
+      },
+   
+    ]
+  },
+
+
+  {
+    path: '',
+    component: AppLayoutAdminComponent,
+    children: [
+      { path: '', redirectTo: 'dashboardadmin', pathMatch: 'full' },
+      {
+        path: 'dashboardadmin',
+        component: DashboardAdminComponent,
+        canActivate: [AuthGuard],
+        title: 'Angular Dashboard | TailAdmin'
+      },
+       {
+        path: 'profileadmin',
+        component: ProfileAdminComponent,
+        canActivate: [AuthGuard],
+        title: 'Angular Profile | TailAdmin'
       },
    
     ]

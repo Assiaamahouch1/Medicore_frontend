@@ -102,7 +102,7 @@ isLoggedIn(): boolean {
     }
     
     // Si c'est juste un nom de fichier
-    return `${this.apiUrl}/superadmin/image/${avatarValue}`;
+    return `${this.apiUrl}/image/${avatarValue}`;
   }
 
   /**
@@ -110,6 +110,28 @@ isLoggedIn(): boolean {
    */
   getAvatarBlob(avatarValue: string): Observable<Blob> {
     const url = this.getAvatar(avatarValue);
+    return this.http.get(url, { responseType: 'blob' });
+  }
+  getAvatarSuperAdmin(avatarValue: string): string {
+    // Si c'est déjà une URL complète, la retourner telle quelle
+    if (avatarValue.startsWith('http://') || avatarValue.startsWith('https://')) {
+      return avatarValue;
+    }
+    
+    // Si c'est un chemin qui commence par /
+    if (avatarValue.startsWith('/')) {
+      return `http://localhost:8081${avatarValue}`;
+    }
+    
+    // Si c'est juste un nom de fichier
+    return `${this.apiUrl}/superadmin/image/${avatarValue}`;
+  }
+
+  /**
+   * Récupérer l'image en Blob
+   */
+  getAvatarBlobSuperAdmin(avatarValue: string): Observable<Blob> {
+    const url = this.getAvatarSuperAdmin(avatarValue);
     return this.http.get(url, { responseType: 'blob' });
   }
 }

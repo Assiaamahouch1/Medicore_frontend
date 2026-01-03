@@ -20,6 +20,7 @@ export class UserDrpdownsecreComponent {
   isOpen = false;
   loading = false;
   defaultAvatar = '/images/user/avatar.jpg';
+  avatarDataUrl: string = this.defaultAvatar;
 
   user: AuthAdmin = {
     nom: '',
@@ -27,7 +28,7 @@ export class UserDrpdownsecreComponent {
     username: '',
     numTel: '',
     role:'',
-    avatar: this.defaultAvatar
+    avatar: ''
   };
 
   constructor(private authService: AuthService) {}
@@ -45,20 +46,41 @@ export class UserDrpdownsecreComponent {
     this.authService.getCurrentAuth().subscribe({
       next: (user) => {
         console.log('👤 User dropdown:', user);
+        this.user = user;
         
-        this.user = {
-          ...user,
-          avatar: user.avatar 
-            ? this.authService.getAvatar(user.avatar)
-            : this.defaultAvatar
-        };
+        // ✅ Charger l'avatar avec authentification JWT
+        if (user.avatar) {
+          this.loadAvatarWithAuth(user.avatar);
+        } else {
+          this.avatarDataUrl = this.defaultAvatar;
+        }
         
         this.loading = false;
       },
       error: (err) => {
-        console.error('Erreur chargement user dropdown:', err);
-        this.user.avatar = this.defaultAvatar;
+        console.error('❌ Erreur chargement user dropdown:', err);
+        this.avatarDataUrl = this.defaultAvatar;
         this.loading = false;
+      }
+    });
+  }
+
+  /**
+   * ✅ Charger l'avatar avec le token JWT
+   */
+  loadAvatarWithAuth(avatarFilename: string): void {
+    this.authService.getAvatarBlob(avatarFilename).subscribe({
+      next: (blob) => {
+        const reader = new FileReader();
+        reader.onload = () => {
+          this.avatarDataUrl = reader.result as string;
+          console.log('✅ Avatar dropdown chargé avec succès');
+        };
+        reader.readAsDataURL(blob);
+      },
+      error: (err) => {
+        console.error('❌ Erreur chargement avatar dropdown:', err);
+        this.avatarDataUrl = this.defaultAvatar;
       }
     });
   }
@@ -72,14 +94,8 @@ export class UserDrpdownsecreComponent {
   }
 
   logout() {
-    // Supprimer le token
-    localStorage.removeItem('token');
-    // Ou sessionStorage si tu l'utilises
-    // sessionStorage.removeItem('token');
-    
+    // ✅ Utiliser authService.logout() qui gère tout
+    this.authService.logout();
     this.closeDropdown();
-    
-    // Rediriger vers la page de connexion
-    // (le routerLink s'en charge déjà dans le template)
   }
 }

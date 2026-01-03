@@ -78,7 +78,7 @@ export class UserInfoCardComponent implements OnInit {
   }
 
   loadAvatarWithAuth(avatarFilename: string): void {
-    this.authService.getAvatarBlob(avatarFilename).subscribe({
+    this.authService.getAvatarBlobSuperAdmin(avatarFilename).subscribe({
       next: (blob) => {
         const reader = new FileReader();
         reader.onload = () => {

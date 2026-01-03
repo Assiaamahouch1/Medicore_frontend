@@ -19,14 +19,14 @@ export class UserInfoCardSecComponent {
   loading = false;
   selectedAvatarFile: File | null = null;
   defaultAvatar = '/images/user/default.png';
-
+  avatarDataUrl: string = this.defaultAvatar;
   user: AuthAdmin = {
     nom: '',
     prenom: '',
     username: '',
     numTel: '',
     role:'',
-    avatar: this.defaultAvatar
+    avatar: ''
   };
 
   userBackup: AuthAdmin = { ...this.user };
@@ -49,24 +49,38 @@ export class UserInfoCardSecComponent {
     this.authService.getCurrentAuth().subscribe({
       next: (user) => {
         console.log('👤 User reçu du backend:', user);
-        
-        this.user = {
-          ...user,
-          // getAvatar gère automatiquement les URLs complètes
-          avatar: user.avatar 
-            ? this.authService.getAvatar(user.avatar)
-            : this.defaultAvatar
-        };
-        
-        
-        
+        this.user = user;
         this.userBackup = { ...this.user };
+        
+        if (user.avatar) {
+          this.loadAvatarWithAuth(user.avatar);
+        } else {
+          this.avatarDataUrl = this.defaultAvatar;
+        }
+        
         this.loading = false;
       },
       error: (err) => {
-        console.error('Erreur chargement:', err);
-        
+        console.error('❌ Erreur chargement:', err);
+        this.avatarDataUrl = this.defaultAvatar;
         this.loading = false;
+      }
+    });
+  }
+
+  loadAvatarWithAuth(avatarFilename: string): void {
+    this.authService.getAvatarBlob(avatarFilename).subscribe({
+      next: (blob) => {
+        const reader = new FileReader();
+        reader.onload = () => {
+          this.avatarDataUrl = reader.result as string;
+          console.log('✅ Avatar chargé avec succès en base64');
+        };
+        reader.readAsDataURL(blob);
+      },
+      error: (err) => {
+        console.error('❌ Erreur chargement avatar:', err);
+        this.avatarDataUrl = this.defaultAvatar;
       }
     });
   }

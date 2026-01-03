@@ -6,7 +6,7 @@
   >
     <span class="mr-3 overflow-hidden rounded-full h-11 w-11">
       <img 
-        [src]="user.avatar || defaultAvatar" 
+        [src]="avatarDataUrl" 
         alt="Avatar utilisateur"
         (error)="user.avatar = defaultAvatar"
         class="w-full h-full object-cover"
