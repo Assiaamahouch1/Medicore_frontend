@@ -79,6 +79,12 @@ export const routes: Routes = [
         canActivate: [AuthGuard],
         title: 'Angular Dashboard | TailAdmin'
       },
+      {
+        path: 'rendezVous',
+        component: RendezVousComponent,
+        canActivate: [AuthGuard],
+        title: 'AngularRendez_Vous | TailAdmin'
+      },
    
     ]
   },
@@ -100,6 +106,7 @@ export const routes: Routes = [
         component: ProfileAdminComponent,
         canActivate: [AuthGuard],
         title: 'Angular Profile | TailAdmin'
+
       },
    
     ]
