@@ -1,0 +1,178 @@
+<app-modal
+  [isOpen]="isStatusModalOpen"
+  (close)="closeStatusModal()"
+  className="max-w-[600px] m-4"
+>
+  <div class="no-scrollbar relative w-full max-w-[600px] overflow-y-auto rounded-3xl bg-white p-4 dark:bg-gray-900 lg:p-11">
+    <div class="px-2 pr-14">
+      <h4 class="mb-2 text-2xl font-semibold text-gray-800 dark:text-white/90">
+        Gestion du Service
+      </h4>
+      <p class="mb-6 text-sm text-gray-500 dark:text-gray-400 lg:mb-7">
+        Activer, désactiver ou renouveler l'abonnement du cabinet.
+      </p>
+    </div>
+
+    <!-- Message d'erreur -->
+    <div *ngIf="errorMessage" class="mx-2 mb-4 rounded-lg bg-red-50 p-4 text-sm text-red-800 dark:bg-red-900/20 dark:text-red-400">
+      {{ errorMessage }}
+    </div>
+
+    <div class="px-2">
+      <!-- Informations cabinet -->
+      <div class="mb-6 p-4 rounded-xl bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
+        <div class="flex items-center justify-between mb-4">
+          <h5 class="text-lg font-medium text-gray-800 dark:text-white/90">
+            {{ normalizedCabinet?.nom }}
+          </h5>
+          <span 
+            class="inline-flex items-center px-3 py-1.5 rounded-full text-sm font-medium"
+            [ngClass]="getStatusBadgeClass()"
+          >
+            <span 
+              class="w-2 h-2 rounded-full mr-2"
+              [ngClass]="isServiceActive() ? 'bg-green-500' : 'bg-gray-400'"
+            ></span>
+            {{ isServiceActive() ? 'Actif' : 'Inactif' }}
+          </span>
+        </div>
+        
+        <!-- Statut abonnement -->
+        <div *ngIf="!loadingStatus && subscriptionStatus" class="grid grid-cols-3 gap-4 text-center">
+          <div class="p-3 rounded-lg bg-white dark:bg-gray-900">
+            <div class="text-xl font-bold" [ngClass]="subscriptionStatus.active ? 'text-green-600' : 'text-gray-400'">
+              {{ subscriptionStatus.active ? '✓' : '✗' }}
+            </div>
+            <div class="text-xs text-gray-500 dark:text-gray-400">Actif</div>
+          </div>
+          <div class="p-3 rounded-lg bg-white dark:bg-gray-900">
+            <div class="text-xl font-bold" [ngClass]="subscriptionStatus.expired ? 'text-red-600' : 'text-green-600'">
+              {{ subscriptionStatus.expired ? '✓' : '✗' }}
+            </div>
+            <div class="text-xs text-gray-500 dark:text-gray-400">Expiré</div>
+          </div>
+          <div class="p-3 rounded-lg bg-white dark:bg-gray-900">
+            <div class="text-xl font-bold" [ngClass]="getExpirationClass()">
+              {{ subscriptionStatus.daysRemaining }}
+            </div>
+            <div class="text-xs text-gray-500 dark:text-gray-400">Jours</div>
+          </div>
+        </div>
+        
+        <div *ngIf="loadingStatus" class="text-center text-gray-500 py-4">
+          Chargement du statut...
+        </div>
+      </div>
+
+      <!-- Actions activation/désactivation -->
+      <div class="mb-6">
+        <h6 class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">Action rapide</h6>
+        
+        <!-- Avertissement si expiration non définie -->
+        <div *ngIf="!isServiceActive() && !canActivate()" class="mb-3 p-3 rounded-lg bg-amber-50 border border-amber-200 dark:bg-amber-900/20 dark:border-amber-800">
+          <div class="flex items-start gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-amber-500 mt-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+              <line x1="12" y1="9" x2="12" y2="13"/>
+              <line x1="12" y1="17" x2="12.01" y2="17"/>
+            </svg>
+            <p class="text-sm text-amber-700 dark:text-amber-400">
+              Pour activer le service, veuillez d'abord <strong>renouveler l'abonnement</strong> ou <strong>définir une date d'expiration</strong> future ci-dessous.
+            </p>
+          </div>
+        </div>
+
+        <div class="flex gap-3">
+          <button
+            *ngIf="!isServiceActive()"
+            (click)="activateService()"
+            [disabled]="isLoading || !canActivate()"
+            class="flex-1 inline-flex items-center justify-center gap-2 rounded-lg bg-green-600 px-4 py-3 text-sm font-medium text-white shadow-sm hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+              <polyline points="22 4 12 14.01 9 11.01"/>
+            </svg>
+            Activer le service
+          </button>
+          
+          <button
+            *ngIf="isServiceActive()"
+            (click)="deactivateService()"
+            [disabled]="isLoading"
+            class="flex-1 inline-flex items-center justify-center gap-2 rounded-lg bg-orange-500 px-4 py-3 text-sm font-medium text-white shadow-sm hover:bg-orange-600 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/>
+              <line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/>
+            </svg>
+            Désactiver le service
+          </button>
+        </div>
+      </div>
+
+      <!-- Renouvellement abonnement -->
+      <div class="mb-6 p-4 rounded-xl border border-gray-200 dark:border-gray-700">
+        <h6 class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-4">Renouveler l'abonnement</h6>
+        
+        <div class="flex items-end gap-3 mb-4">
+          <div class="flex-1">
+            <app-label>Durée (mois)</app-label>
+            <select
+              [(ngModel)]="renewMonths"
+              class="w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 
+                     focus:border-brand-300 focus:outline-none focus:ring-2 focus:ring-brand-500/10
+                     dark:border-gray-700 dark:bg-gray-800 dark:text-white/90 dark:focus:border-brand-800"
+            >
+              <option [value]="1">1 mois</option>
+              <option [value]="3">3 mois</option>
+              <option [value]="6">6 mois</option>
+              <option [value]="12">12 mois</option>
+              <option [value]="24">24 mois</option>
+            </select>
+          </div>
+          <button
+            (click)="renewSubscription()"
+            [disabled]="isLoading"
+            class="inline-flex items-center justify-center gap-2 rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-medium text-white shadow-sm hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            Renouveler
+          </button>
+        </div>
+
+        <div class="border-t border-gray-200 dark:border-gray-700 pt-4">
+          <div class="flex items-end gap-3">
+            <div class="flex-1">
+              <app-label>Ou définir une date précise</app-label>
+              <input
+                type="date"
+                [(ngModel)]="newExpirationDate"
+                class="w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 
+                       focus:border-brand-300 focus:outline-none focus:ring-2 focus:ring-brand-500/10
+                       dark:border-gray-700 dark:bg-gray-800 dark:text-white/90 dark:focus:border-brand-800"
+              />
+            </div>
+            <button
+              (click)="setExpirationDate()"
+              [disabled]="isLoading"
+              class="inline-flex items-center justify-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
+            >
+              Définir
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bouton Fermer -->
+      <div class="flex items-center gap-3 lg:justify-end">
+        <app-button 
+          size="sm" 
+          variant="outline"
+          (btnClick)="closeStatusModal()"
+        >
+          Fermer
+        </app-button>
+      </div>
+    </div>
+  </div>
+</app-modal>

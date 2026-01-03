@@ -15,7 +15,16 @@ export interface AuthAdmin {
   actif?: boolean;
   cabinetId?: number;
 }
-
+export interface RegisterRequest {
+  username: string;
+  password: string;
+  nom: string;
+  prenom: string;
+  numTel?: string;
+  signature?: string;
+  role: 'ADMIN' | 'MEDECIN' | 'SECRETAIRE';
+  cabinetId?: number;
+}
 @Injectable({
   providedIn: 'root'
 })
@@ -134,4 +143,9 @@ isLoggedIn(): boolean {
     const url = this.getAvatarSuperAdmin(avatarValue);
     return this.http.get(url, { responseType: 'blob' });
   }
+  register(request: RegisterRequest): Observable<string> {
+      return this.http.post<string>(`${this.apiUrl}/register`, request, {
+        responseType: 'text' as 'json'
+      });
+    }
 }

@@ -1,6 +1,7 @@
 import { ProfilesecComponent } from './pages/secretaire/profilesec/profilesec.component';
 import { ProfileAdminComponent } from './pages/admin/profileadmin/profileadmin.component';
-
+import { AppLayoutMedcComponent } from './shared/layout/app-layout-medc/app-layout-medc.component';
+import { DashboardMedComponent } from './pages/Medecin/dashboard-med/dashboard-med.component';
 import { Routes, CanActivate } from '@angular/router';
 import { ProfileComponent } from './pages/profile/profile.component';
 import { BasicTablesComponent } from './pages/admin/admin.component';
@@ -45,6 +46,12 @@ export const routes: Routes = [
         component: BasicTablesComponent,
         canActivate: [AuthGuard],
         title: 'Angular Admins | TailAdmin'
+},
+       // Place la feature Cabinets sous le layout Admin
+      {
+        path: 'admin/cabinets',
+        loadChildren: () =>
+          import('./pages/admin/cabinets/cabinets.module').then((m) => m.CabinetsModule),
       },
     ]
   },
@@ -108,11 +115,27 @@ export const routes: Routes = [
         title: 'Angular Profile | TailAdmin'
 
       },
+      {
+        path: 'admin/cabinets',
+        loadChildren: () =>
+          import('./pages/admin/cabinets/cabinets.module').then((m) => m.CabinetsModule),
+      },
+    ]
+  },
+   {
+    path: '',
+    component: AppLayoutMedcComponent,
+    children: [
+      { path: '', redirectTo: 'dashboardmed', pathMatch: 'full' },
+      {
+        path: 'dashboardmed',
+        component: DashboardMedComponent,
+        canActivate: [AuthGuard],
+        title: 'Angular Dashboard | TailAdmin'
+      },
    
     ]
   },
- 
-
   { path: 'signin', component: SignInComponent, title: 'Sign In | TailAdmin' },
   { path: 'forgot-password', component: ForgotComponent },
   { path: 'reset-password/:token', component: ResetComponent },

@@ -1,0 +1,141 @@
+<app-modal
+  [isOpen]="isShowModalOpen"
+  (close)="closeShowModal()"
+  className="max-w-[700px] m-4"
+>
+  <div class="no-scrollbar relative w-full max-w-[700px] overflow-y-auto rounded-3xl bg-white p-4 dark:bg-gray-900 lg:p-11">
+    <div class="px-2 pr-14">
+      <h4 class="mb-2 text-2xl font-semibold text-gray-800 dark:text-white/90">
+        Détails du Cabinet
+      </h4>
+      <p class="mb-6 text-sm text-gray-500 dark:text-gray-400 lg:mb-7">
+        Informations complètes du cabinet médical.
+      </p>
+    </div>
+
+    <div class="custom-scrollbar h-[400px] overflow-y-auto px-2 pb-3">
+      <div>
+        <!-- Logo (lecture seule) -->
+        <div class="flex justify-center mb-8">
+          <div class="relative w-24 h-24">
+            <img
+              [src]="logoDataUrl"
+              alt="Logo"
+              class="w-full h-full rounded-xl object-cover border-2 border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800"
+            />
+          </div>
+        </div>
+
+        <!-- Statut du service -->
+        <div class="flex justify-center mb-6">
+          <span 
+            class="inline-flex items-center px-4 py-2 rounded-full text-sm font-medium"
+            [ngClass]="getStatusBadgeClass()"
+          >
+            <span 
+              class="w-2 h-2 rounded-full mr-2"
+              [ngClass]="cabinet?.service_actif ? 'bg-green-500' : 'bg-gray-400'"
+            ></span>
+            Service {{ cabinet?.service_actif ? 'Actif' : 'Inactif' }}
+          </span>
+        </div>
+
+        <div class="grid grid-cols-1 gap-x-6 gap-y-5 lg:grid-cols-2">
+          <!-- Nom -->
+          <div class="col-span-2">
+            <app-label>Nom du cabinet</app-label>
+            <div class="w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2.5 text-sm text-gray-800 
+                        dark:border-gray-700 dark:bg-gray-800 dark:text-white/90">
+              {{ cabinet?.nom || '-' }}
+            </div>
+          </div>
+
+          <!-- Spécialité -->
+          <div class="col-span-2 lg:col-span-1">
+            <app-label>Spécialité</app-label>
+            <div class="w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2.5 text-sm text-gray-800 
+                        dark:border-gray-700 dark:bg-gray-800 dark:text-white/90">
+              {{ cabinet?.specialite || 'Non définie' }}
+            </div>
+          </div>
+
+          <!-- Téléphone -->
+          <div class="col-span-2 lg:col-span-1">
+            <app-label>Téléphone</app-label>
+            <div class="w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2.5 text-sm text-gray-800 
+                        dark:border-gray-700 dark:bg-gray-800 dark:text-white/90">
+              {{ cabinet?.tel || '-' }}
+            </div>
+          </div>
+
+          <!-- Adresse -->
+          <div class="col-span-2">
+            <app-label>Adresse</app-label>
+            <div class="w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2.5 text-sm text-gray-800 
+                        dark:border-gray-700 dark:bg-gray-800 dark:text-white/90">
+              {{ cabinet?.adresse || 'Non définie' }}
+            </div>
+          </div>
+
+          <!-- Date expiration -->
+          <div class="col-span-2 lg:col-span-1">
+            <app-label>Date d'expiration</app-label>
+            <div class="w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2.5 text-sm text-gray-800 
+                        dark:border-gray-700 dark:bg-gray-800 dark:text-white/90">
+              {{ cabinet?.date_expiration_service || 'Non définie' }}
+            </div>
+          </div>
+
+          <!-- Statut abonnement -->
+          <div class="col-span-2 lg:col-span-1">
+            <app-label>Jours restants</app-label>
+            <div class="w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2.5 text-sm 
+                        dark:border-gray-700 dark:bg-gray-800"
+                 [ngClass]="getExpirationClass()">
+              <ng-container *ngIf="loadingStatus">Chargement...</ng-container>
+              <ng-container *ngIf="!loadingStatus && subscriptionStatus">
+                <span *ngIf="subscriptionStatus.expired" class="font-medium">Expiré</span>
+                <span *ngIf="!subscriptionStatus.expired">
+                  {{ subscriptionStatus.daysRemaining }} jours
+                </span>
+              </ng-container>
+              <ng-container *ngIf="!loadingStatus && !subscriptionStatus">-</ng-container>
+            </div>
+          </div>
+        </div>
+
+        <!-- Informations abonnement détaillées -->
+        <div *ngIf="subscriptionStatus && !loadingStatus" class="mt-6 p-4 rounded-xl bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
+          <h6 class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">Statut de l'abonnement</h6>
+          <div class="grid grid-cols-3 gap-4 text-center">
+            <div>
+              <div class="text-2xl font-bold" [ngClass]="subscriptionStatus.active ? 'text-green-600' : 'text-gray-400'">
+                {{ subscriptionStatus.active ? '✓' : '✗' }}
+              </div>
+              <div class="text-xs text-gray-500 dark:text-gray-400">Actif</div>
+            </div>
+            <div>
+              <div class="text-2xl font-bold" [ngClass]="subscriptionStatus.expired ? 'text-red-600' : 'text-green-600'">
+                {{ subscriptionStatus.expired ? '✓' : '✗' }}
+              </div>
+              <div class="text-xs text-gray-500 dark:text-gray-400">Expiré</div>
+            </div>
+            <div>
+              <div class="text-2xl font-bold" [ngClass]="getExpirationClass()">
+                {{ subscriptionStatus.daysRemaining }}
+              </div>
+              <div class="text-xs text-gray-500 dark:text-gray-400">Jours restants</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bouton Fermer -->
+    <div class="flex items-center gap-3 px-2 mt-6 lg:justify-end">
+      <app-button size="sm" variant="outline" (btnClick)="closeShowModal()">
+        Fermer
+      </app-button>
+    </div>
+  </div>
+</app-modal>

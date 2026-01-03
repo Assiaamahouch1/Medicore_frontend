@@ -4,10 +4,23 @@
     (click)="toggleDropdown()"
   >
     <span
-      class="absolute right-0 top-0.5 z-10 h-2 w-2 rounded-full bg-orange-400"
-      [ngClass]="{ 'hidden': !notifying, 'flex': notifying }"
+      class="absolute right-0 top-0.5 z-10 h-2 w-2 rounded-full"
+      [ngClass]="{
+        'hidden': !notifying,
+        'flex': notifying,
+        'bg-red-500': alerts.length > 0 && alerts[0].urgency === 'critical',
+        'bg-orange-400': alerts.length > 0 && alerts[0].urgency === 'warning',
+        'bg-blue-400': alerts.length > 0 && alerts[0].urgency === 'info'
+      }"
     >
-      <span class="absolute inline-flex w-full h-full bg-orange-400 rounded-full opacity-75 animate-ping"></span>
+      <span 
+        class="absolute inline-flex w-full h-full rounded-full opacity-75 animate-ping"
+        [ngClass]="{
+          'bg-red-500': alerts.length > 0 && alerts[0].urgency === 'critical',
+          'bg-orange-400': alerts.length > 0 && alerts[0].urgency === 'warning',
+          'bg-blue-400': alerts.length > 0 && alerts[0].urgency === 'info'
+        }"
+      ></span>
     </span>
     <svg
       class="fill-current"
@@ -31,8 +44,11 @@
   >
     <div class="flex items-center justify-between pb-3 mb-3 border-b border-gray-100 dark:border-gray-700">
       <h5 class="text-lg font-semibold text-gray-800 dark:text-gray-200">
-        Notification
+        Alertes d'expiration
       </h5>
+      <span *ngIf="alerts.length > 0" class="px-2 py-1 text-xs font-medium text-white bg-red-500 rounded-full">
+        {{ alerts.length }}
+      </span>
       <button
         (click)="toggleDropdown()"
         class="text-gray-500 transition dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
@@ -53,289 +69,63 @@
         </svg>
       </button>
     </div>
+    
+    <!-- Liste des alertes -->
     <ul class="flex flex-col h-auto overflow-y-auto custom-scrollbar">
-      <!-- Example notification items, repeat as needed -->
-      <li>
+      <!-- Message si aucune alerte -->
+      <li *ngIf="alerts.length === 0" class="flex flex-col items-center justify-center py-8 text-gray-500 dark:text-gray-400">
+        <svg class="w-12 h-12 mb-3 text-gray-300 dark:text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+        </svg>
+        <span class="text-sm">Aucune alerte d'expiration</span>
+        <span class="text-xs text-gray-400">Tous les cabinets sont à jour</span>
+      </li>
+
+      <!-- Alertes d'expiration -->
+      <li *ngFor="let alert of alerts">
         <app-dropdown-item
           (itemClick)="closeDropdown()"
           [className]="'w-full text-left text-sm text-gray-700 hover:text-gray-900 flex gap-3 rounded-lg border-b border-gray-100 p-3 px-4.5 py-3 hover:bg-gray-100 dark:border-gray-800 dark:hover:bg-white/5'"
         >
-          <span class="relative block w-full h-10 rounded-full z-1 max-w-10">
-            <img
-              width="40"
-              height="40"
-              src="/images/user/user-02.jpg"
-              alt="User"
-              class="w-full overflow-hidden rounded-full"
-            />
-            <span class="absolute bottom-0 right-0 z-10 h-2.5 w-full max-w-2.5 rounded-full border-[1.5px] border-white bg-success-500 dark:border-gray-900"></span>
+          <!-- Icône d'alerte -->
+          <span class="relative flex items-center justify-center w-10 h-10 rounded-full" 
+                [ngClass]="getUrgencyColor(alert.urgency) + ' bg-opacity-20'">
+            <svg class="w-5 h-5" [ngClass]="getUrgencyTextColor(alert.urgency)" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                    d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z">
+              </path>
+            </svg>
           </span>
-          <span class="block">
-            <span class="mb-1.5 block text-theme-sm text-gray-500 dark:text-gray-400 space-x-1">
+          
+          <!-- Contenu de l'alerte -->
+          <span class="block flex-1">
+            <span class="mb-1 block text-theme-sm text-gray-500 dark:text-gray-400">
               <span class="font-medium text-gray-800 dark:text-white/90">
-                Terry Franci
+                {{ alert.cabinet.nom }}
               </span>
-              <span> requests permission to change</span>
-              <span class="font-medium text-gray-800 dark:text-white/90">
-                Project - Nganter App
-              </span>
+              <span> - Abonnement expire bientôt</span>
             </span>
-            <span class="flex items-center gap-2 text-gray-500 text-theme-xs dark:text-gray-400">
-              <span>Project</span>
-              <span class="w-1 h-1 bg-gray-400 rounded-full"></span>
-              <span>5 min ago</span>
-            </span>
-          </span>
-        </app-dropdown-item>
-      </li>
-    
-      <li>
-        <app-dropdown-item
-          (itemClick)="closeDropdown()"
-          [className]="'w-full text-left text-sm text-gray-700 hover:text-gray-900 flex gap-3 rounded-lg border-b border-gray-100 p-3 px-4.5 py-3 hover:bg-gray-100 dark:border-gray-800 dark:hover:bg-white/5'"
-        >
-          <span class="relative block w-full h-10 rounded-full z-1 max-w-10">
-            <img
-              width="40"
-              height="40"
-              src="/images/user/user-03.jpg"
-              alt="User"
-              class="w-full overflow-hidden rounded-full"
-            />
-            <span class="absolute bottom-0 right-0 z-10 h-2.5 w-full max-w-2.5 rounded-full border-[1.5px] border-white bg-success-500 dark:border-gray-900"></span>
-          </span>
-          <span class="block">
-            <span class="mb-1.5 block text-theme-sm text-gray-500 dark:text-gray-400 space-x-1">
-              <span class="font-medium text-gray-800 dark:text-white/90">
-                Alena Franci
-              </span>
-              <span>requests permission to change</span>
-              <span class="font-medium text-gray-800 dark:text-white/90">
-                Project - Nganter App
-              </span>
-            </span>
-            <span class="flex items-center gap-2 text-gray-500 text-theme-xs dark:text-gray-400">
-              <span>Project</span>
-              <span class="w-1 h-1 bg-gray-400 rounded-full"></span>
-              <span>8 min ago</span>
+            <span class="flex items-center gap-2 text-theme-xs" [ngClass]="getUrgencyTextColor(alert.urgency)">
+              <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
+              <span *ngIf="alert.daysRemaining === 0">Expire aujourd'hui !</span>
+              <span *ngIf="alert.daysRemaining === 1">Expire demain</span>
+              <span *ngIf="alert.daysRemaining > 1">Expire dans {{ alert.daysRemaining }} jours</span>
+              <span class="w-1 h-1 rounded-full" [ngClass]="getUrgencyColor(alert.urgency)"></span>
+              <span class="text-gray-400">{{ alert.cabinet.date_expiration_service }}</span>
             </span>
           </span>
         </app-dropdown-item>
       </li>
-    
-      <li>
-        <app-dropdown-item
-          (itemClick)="closeDropdown()"
-          [className]="'w-full text-left text-sm text-gray-700 hover:text-gray-900 flex gap-3 rounded-lg border-b border-gray-100 p-3 px-4.5 py-3 hover:bg-gray-100 dark:border-gray-800 dark:hover:bg-white/5'"
-        >
-          <span class="relative block w-full h-10 rounded-full z-1 max-w-10">
-            <img
-              width="40"
-              height="40"
-              src="/images/user/user-04.jpg"
-              alt="User"
-              class="w-full overflow-hidden rounded-full"
-            />
-            <span class="absolute bottom-0 right-0 z-10 h-2.5 w-full max-w-2.5 rounded-full border-[1.5px] border-white bg-success-500 dark:border-gray-900"></span>
-          </span>
-          <span class="block">
-            <span class="mb-1.5 block text-theme-sm text-gray-500 dark:text-gray-400 space-x-1">
-              <span class="font-medium text-gray-800 dark:text-white/90">
-                Jocelyn Kenter
-              </span>
-              <span> requests permission to change</span>
-              <span class="font-medium text-gray-800 dark:text-white/90">
-                Project - Nganter App
-              </span>
-            </span>
-            <span class="flex items-center gap-2 text-gray-500 text-theme-xs dark:text-gray-400">
-              <span>Project</span>
-              <span class="w-1 h-1 bg-gray-400 rounded-full"></span>
-              <span>15 min ago</span>
-            </span>
-          </span>
-        </app-dropdown-item>
-      </li>
-    
-      <li>
-        <app-dropdown-item
-          (itemClick)="closeDropdown()"
-          [className]="'w-full text-left text-sm text-gray-700 hover:text-gray-900 flex gap-3 rounded-lg border-b border-gray-100 p-3 px-4.5 py-3 hover:bg-gray-100 dark:border-gray-800 dark:hover:bg-white/5'"
-          [to]="'/'"
-        >
-          <span class="relative block w-full h-10 rounded-full z-1 max-w-10">
-            <img
-              width="40"
-              height="40"
-              src="/images/user/user-05.jpg"
-              alt="User"
-              class="w-full overflow-hidden rounded-full"
-            />
-            <span class="absolute bottom-0 right-0 z-10 h-2.5 w-full max-w-2.5 rounded-full border-[1.5px] border-white bg-error-500 dark:border-gray-900"></span>
-          </span>
-          <span class="block">
-            <span class="mb-1.5 block text-theme-sm text-gray-500 dark:text-gray-400 space-x-1">
-              <span class="font-medium text-gray-800 dark:text-white/90">
-                Brandon Philips
-              </span>
-              <span>requests permission to change</span>
-              <span class="font-medium text-gray-800 dark:text-white/90">
-                Project - Nganter App
-              </span>
-            </span>
-            <span class="flex items-center gap-2 text-gray-500 text-theme-xs dark:text-gray-400">
-              <span>Project</span>
-              <span class="w-1 h-1 bg-gray-400 rounded-full"></span>
-              <span>1 hr ago</span>
-            </span>
-          </span>
-        </app-dropdown-item>
-      </li>
-    
-      <li>
-        <app-dropdown-item
-          (itemClick)="closeDropdown()"
-          [className]="'w-full text-left text-sm text-gray-700 hover:text-gray-900 flex gap-3 rounded-lg border-b border-gray-100 p-3 px-4.5 py-3 hover:bg-gray-100 dark:border-gray-800 dark:hover:bg-white/5'"
-        >
-          <span class="relative block w-full h-10 rounded-full z-1 max-w-10">
-            <img
-              width="40"
-              height="40"
-              src="/images/user/user-02.jpg"
-              alt="User"
-              class="w-full overflow-hidden rounded-full"
-            />
-            <span class="absolute bottom-0 right-0 z-10 h-2.5 w-full max-w-2.5 rounded-full border-[1.5px] border-white bg-success-500 dark:border-gray-900"></span>
-          </span>
-          <span class="block">
-            <span class="mb-1.5 block text-theme-sm text-gray-500 dark:text-gray-400 space-x-1">
-              <span class="font-medium text-gray-800 dark:text-white/90">
-                Terry Franci
-              </span>
-              <span> requests permission to change</span>
-              <span class="font-medium text-gray-800 dark:text-white/90">
-                Project - Nganter App
-              </span>
-            </span>
-            <span class="flex items-center gap-2 text-gray-500 text-theme-xs dark:text-gray-400">
-              <span>Project</span>
-              <span class="w-1 h-1 bg-gray-400 rounded-full"></span>
-              <span>5 min ago</span>
-            </span>
-          </span>
-        </app-dropdown-item>
-      </li>
-    
-      <li>
-        <app-dropdown-item
-          (itemClick)="closeDropdown()"
-          [className]="'w-full text-left text-sm text-gray-700 hover:text-gray-900 flex gap-3 rounded-lg border-b border-gray-100 p-3 px-4.5 py-3 hover:bg-gray-100 dark:border-gray-800 dark:hover:bg-white/5'"
-        >
-          <span class="relative block w-full h-10 rounded-full z-1 max-w-10">
-            <img
-              width="40"
-              height="40"
-              src="/images/user/user-03.jpg"
-              alt="User"
-              class="w-full overflow-hidden rounded-full"
-            />
-            <span class="absolute bottom-0 right-0 z-10 h-2.5 w-full max-w-2.5 rounded-full border-[1.5px] border-white bg-success-500 dark:border-gray-900"></span>
-          </span>
-          <span class="block">
-            <span class="mb-1.5 block text-theme-sm text-gray-500 dark:text-gray-400 space-x-1">
-              <span class="font-medium text-gray-800 dark:text-white/90">
-                Alena Franci
-              </span>
-              <span> requests permission to change</span>
-              <span class="font-medium text-gray-800 dark:text-white/90">
-                Project - Nganter App
-              </span>
-            </span>
-            <span class="flex items-center gap-2 text-gray-500 text-theme-xs dark:text-gray-400">
-              <span>Project</span>
-              <span class="w-1 h-1 bg-gray-400 rounded-full"></span>
-              <span>8 min ago</span>
-            </span>
-          </span>
-        </app-dropdown-item>
-      </li>
-    
-      <li>
-        <app-dropdown-item
-          (itemClick)="closeDropdown()"
-          [className]="'w-full text-left text-sm text-gray-700 hover:text-gray-900 flex gap-3 rounded-lg border-b border-gray-100 p-3 px-4.5 py-3 hover:bg-gray-100 dark:border-gray-800 dark:hover:bg-white/5'"
-        >
-          <span class="relative block w-full h-10 rounded-full z-1 max-w-10">
-            <img
-              width="40"
-              height="40"
-              src="/images/user/user-04.jpg"
-              alt="User"
-              class="w-full overflow-hidden rounded-full"
-            />
-            <span class="absolute bottom-0 right-0 z-10 h-2.5 w-full max-w-2.5 rounded-full border-[1.5px] border-white bg-success-500 dark:border-gray-900"></span>
-          </span>
-          <span class="block">
-            <span class="mb-1.5 block text-theme-sm text-gray-500 dark:text-gray-400 space-x-1">
-              <span class="font-medium text-gray-800 dark:text-white/90">
-                Jocelyn Kenter
-              </span>
-              <span> requests permission to change</span>
-              <span class="font-medium text-gray-800 dark:text-white/90">
-                Project - Nganter App
-              </span>
-            </span>
-            <span class="flex items-center gap-2 text-gray-500 text-theme-xs dark:text-gray-400">
-              <span>Project</span>
-              <span class="w-1 h-1 bg-gray-400 rounded-full"></span>
-              <span>15 min ago</span>
-            </span>
-          </span>
-        </app-dropdown-item>
-      </li>
-    
-      <li>
-        <app-dropdown-item
-          (itemClick)="closeDropdown()"
-          [className]="'w-full text-left text-sm text-gray-700 hover:text-gray-900 flex gap-3 rounded-lg border-b border-gray-100 p-3 px-4.5 py-3 hover:bg-gray-100 dark:border-gray-800 dark:hover:bg-white/5'"
-        >
-          <span class="relative block w-full h-10 rounded-full z-1 max-w-10">
-            <img
-              width="40"
-              height="40"
-              src="/images/user/user-05.jpg"
-              alt="User"
-              class="w-full overflow-hidden rounded-full"
-            />
-            <span class="absolute bottom-0 right-0 z-10 h-2.5 w-full max-w-2.5 rounded-full border-[1.5px] border-white bg-error-500 dark:border-gray-900"></span>
-          </span>
-          <span class="block">
-            <span class="mb-1.5 block text-theme-sm text-gray-500 dark:text-gray-400 space-x-1">
-              <span class="font-medium text-gray-800 dark:text-white/90">
-                Brandon Philips
-              </span>
-              <span>requests permission to change</span>
-              <span class="font-medium text-gray-800 dark:text-white/90">
-                Project - Nganter App
-              </span>
-            </span>
-            <span class="flex items-center gap-2 text-gray-500 text-theme-xs dark:text-gray-400">
-              <span>Project</span>
-              <span class="w-1 h-1 bg-gray-400 rounded-full"></span>
-              <span>1 hr ago</span>
-            </span>
-          </span>
-        </app-dropdown-item>
-      </li>
-      <!-- Repeat <li> for more notifications as needed -->
     </ul>
+
+    <!-- Lien vers la gestion des cabinets -->
     <a
-      routerLink="/"
+      routerLink="/admin/cabinets"
       class="block px-4 py-2 mt-3 text-sm font-medium text-center text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700"
     >
-      View All Notifications
+      Gérer les cabinets
     </a>
   </app-dropdown>
 </div>
-
-<!-- block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 flex gap-3 rounded-lg border-b border-gray-100 p-3 px-4.5 py-3 hover:bg-gray-100 dark:border-gray-800 dark:hover:bg-white/5 -->
