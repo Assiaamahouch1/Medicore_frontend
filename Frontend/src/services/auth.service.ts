@@ -143,6 +143,7 @@ isLoggedIn(): boolean {
     const url = this.getAvatarSuperAdmin(avatarValue);
     return this.http.get(url, { responseType: 'blob' });
   }
+  
   register(request: RegisterRequest): Observable<string> {
       return this.http.post<string>(`${this.apiUrl}/register`, request, {
         responseType: 'text' as 'json'

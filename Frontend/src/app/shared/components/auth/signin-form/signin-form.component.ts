@@ -90,6 +90,11 @@ export class SigninFormComponent {
          {
            this.router.navigate(['/dashboardadmin']);
          }
+         if(user.role=="MEDECIN")
+
+         {
+           this.router.navigate(['/dashboardmed']);
+         }
          else if(user.role=="SECRETAIRE"){
           this.router.navigate(['/patients']);
          }

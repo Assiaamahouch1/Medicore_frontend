@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ButtonComponent } from '../../ui/button/button.component';
-import { TableDropdownComponent } from '../../common/table-dropdown/table-dropdown.component';
 import { ModalService } from '../../../services/modal.service';
 import { PatientService , Patient } from '../../../../../services/patient.service';
 
@@ -14,7 +13,6 @@ import { PatientService , Patient } from '../../../../../services/patient.servic
     CommonModule,
     FormsModule,
     ButtonComponent,
-    TableDropdownComponent,
     PatientRestoreModalComponent
   ],
   templateUrl: './historique-table.component.html',

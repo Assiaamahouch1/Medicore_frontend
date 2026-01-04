@@ -5,6 +5,8 @@ import { DashboardMedComponent } from './pages/Medecin/dashboard-med/dashboard-m
 import { Routes, CanActivate } from '@angular/router';
 import { ProfileComponent } from './pages/profile/profile.component';
 import { BasicTablesComponent } from './pages/admin/admin.component';
+import { BasicSecrTablesComponent } from './pages/Medecin/secretaire/secretaire.component';
+
 import { NotFoundComponent } from './pages/other-page/not-found/not-found.component';
 import { AppLayoutComponent } from './shared/layout/app-layout/app-layout.component';
 import { SignInComponent } from './pages/auth-pages/sign-in/sign-in.component';
@@ -133,6 +135,12 @@ export const routes: Routes = [
         canActivate: [AuthGuard],
         title: 'Angular Dashboard | TailAdmin'
       },
+      {
+        path: 'secretaires',
+        component: BasicSecrTablesComponent,
+        canActivate: [AuthGuard],
+        title: 'Angular secretaires | Tailsecretaires'
+},
    
     ]
   },

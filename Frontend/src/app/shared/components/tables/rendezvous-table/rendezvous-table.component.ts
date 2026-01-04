@@ -1,6 +1,5 @@
 import { RendezvousDeleteModalComponent } from './../modals/rendezvous-delete-modal/rendezvous-delete-modal.component';
 import { RendezvousEditModalComponent } from './../modals/rendezvous-edit-modal/rendezvous-edit-modal.component';
-import { RendezvousShowModalComponent } from './../modals/rendezvous-show-modal/rendezvous-show-modal.component';
 import { RendezvousAddModalComponent } from './../modals/rendezvous-add-modal/rendezvous-add-modal.component';
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
@@ -24,7 +23,6 @@ import { RendezvousCalendarModalComponent } from '../modals/rendezvous-calendar-
     RendezvousAddModalComponent,
     RendezvousDeleteModalComponent,
     RendezvousEditModalComponent,
-    RendezvousShowModalComponent,
     RendezvousPrintModalComponent
   ],
   templateUrl: './rendezvous-table.component.html',
