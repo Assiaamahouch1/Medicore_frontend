@@ -4,14 +4,14 @@ import { SidebarService } from '../../services/sidebar.service';
 import { CommonModule } from '@angular/common';
 import { BackdropComponent } from '../backdrop/backdrop.component';
 import { RouterModule } from '@angular/router';
-import { AppHeaderComponent } from '../app-header/app-header.component';
+import { AppHeaderMedcComponent } from '../app-header-medc/app-header-medc.component';
 
 @Component({
   selector: 'app-layout-medc',
   imports: [
     CommonModule,
     RouterModule,
-    AppHeaderComponent,
+    AppHeaderMedcComponent,
     AppSidebarMedcComponent,
     BackdropComponent
   ],

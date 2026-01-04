@@ -1,4 +1,6 @@
 import { ProfilesecComponent } from './pages/secretaire/profilesec/profilesec.component';
+import { ProfileMedcComponent } from './pages/Medecin/profilemedc/profilemedc.component';
+
 import { ProfileAdminComponent } from './pages/admin/profileadmin/profileadmin.component';
 import { AppLayoutMedcComponent } from './shared/layout/app-layout-medc/app-layout-medc.component';
 import { DashboardMedComponent } from './pages/Medecin/dashboard-med/dashboard-med.component';
@@ -141,6 +143,12 @@ export const routes: Routes = [
         canActivate: [AuthGuard],
         title: 'Angular secretaires | Tailsecretaires'
 },
+      {
+        path: 'profilemedc',
+        component: ProfileMedcComponent,
+        canActivate: [AuthGuard],
+        title: 'Angular Profile | TailAdmin'
+      },
    
     ]
   },
