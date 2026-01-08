@@ -16,6 +16,7 @@ export interface Patient {
   mutuelleNumero?: string;
   mutuelleExpireLe?: Date;
   actif?: boolean;
+  cabinetId?: number;
 }
 
 @Injectable({
@@ -47,10 +48,10 @@ export class PatientService {
     return this.http.get<Patient>(`${this.apiUrl}/${id}`);
   }
 
-  getAll(): Observable<Patient[]> {
-    return this.http.get<Patient[]>(`${this.apiUrl}/all`);
+  getAll(cabinetId: number): Observable<Patient[]> {
+    return this.http.get<Patient[]>(`${this.apiUrl}/all/${cabinetId}`);
   }
-  getAllNoActif(): Observable<Patient[]> {
-    return this.http.get<Patient[]>(`${this.apiUrl}/allNoActif`);
+  getAllNoActif(cabinetId: number): Observable<Patient[]> {
+    return this.http.get<Patient[]>(`${this.apiUrl}/allNoActif/${cabinetId}`);
   }
 }

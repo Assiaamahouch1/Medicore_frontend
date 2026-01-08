@@ -9,8 +9,9 @@ export interface RendezVous {
   motif?: string;
   statut?: string;
   notes?: string;
-  patientId?: number;
+  patientId?: string;
   userId?: number;
+  cabinetId?:number;
 }
 
 @Injectable({
@@ -33,16 +34,41 @@ export class RendezvousService {
       responseType: 'text'
     });
   }
-  getAll(): Observable<RendezVous[]> {
-      return this.http.get<RendezVous[]>(`${this.apiUrl}/all`);
-    }
+ getAll(cabinetId: number): Observable<RendezVous[]> {
+     return this.http.get<RendezVous[]>(`${this.apiUrl}/all/${cabinetId}`);
+   }
 
    updatePartiel(id: number, data: {
   dateRdv?: string;
   heureRdv?: string;
   motif?: string;
   notes?: string | null;
+  cabinetId?:number;
 }): Observable<RendezVous> {
   return this.http.patch<RendezVous>(`${this.apiUrl}/${id}/modifier-partiel`, data);
+}
+
+
+getRendezVousEnAttente(cabinetId: number) {
+ return this.http.get<RendezVous[]>(`${this.apiUrl}/en_attente/${cabinetId}`);
+}
+getRendezVousConfirme(cabinetId: number) {
+ return this.http.get<RendezVous[]>(`${this.apiUrl}/liste/${cabinetId}`);
+}
+
+
+ confirmer(id: number): Observable<void> {
+  return this.http.put<void>(`${this.apiUrl}/confirmer/${id}`, null);
+}
+
+
+
+getRendezVousArrive(cabinetId: number) {
+ return this.http.get<RendezVous[]>(`${this.apiUrl}/allArrive/${cabinetId}`);
+}
+
+
+setRendezVousArrive(idRdv: number) {
+  return this.http.put<RendezVous>(`${this.apiUrl}/Arrive/${idRdv}`,{});
 }
 }

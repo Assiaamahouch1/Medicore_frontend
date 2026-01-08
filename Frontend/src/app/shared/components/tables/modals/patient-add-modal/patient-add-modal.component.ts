@@ -1,3 +1,4 @@
+import { AuthService ,AuthAdmin} from './../../../../../../services/auth.service';
 import { Component, EventEmitter, Output, Input } from '@angular/core';
 import { ButtonComponent } from '../../../ui/button/button.component';
 import { LabelComponent } from '../../../form/label/label.component';
@@ -33,16 +34,44 @@ export class PatientAddModalComponent {
   mutuelleNumero: '',
   mutuelleExpireLe: new Date(),
   actif: true,
+   cabinetId: 0,
   };
   selectedFile: File | null = null;
   isLoading: boolean = false;
   errorMessage: string = '';
-  constructor(private patientService: PatientService) {}
+  constructor(private patientService: PatientService,
+    private authService: AuthService
+  ) {}
 
- 
+ user:AuthAdmin ={
+  nom: '',
+    prenom: '',
+    username: '',
+    numTel: '',
+    role: '',
+    avatar: '',
+  actif: true,
+  cabinetId: 0,
+}
   closeAddModal() {
     this.resetForm();
     this.close.emit();
+  }
+   ngOnInit(): void {
+    this.loadCurrentUser();
+  }
+
+
+
+   loadCurrentUser(): void {
+    this.authService.getCurrentAuth().subscribe({
+      next: (user) => {
+        this.user = user;
+      },
+      error: (err) => {
+        console.error('❌ Erreur chargement user dropdown:', err);
+      }
+    });
   }
   handleSave() {
   // Validation
@@ -57,6 +86,7 @@ export class PatientAddModalComponent {
   this.errorMessage = '';
 
   // Créer le patient
+  this.patient.cabinetId=this.user.cabinetId;
   this.patientService.create(this.patient).subscribe({
     next: (createPatient) => {
       console.log('Patient créé:', createPatient);

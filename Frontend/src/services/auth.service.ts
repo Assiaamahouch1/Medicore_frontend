@@ -148,5 +148,5 @@ isLoggedIn(): boolean {
       return this.http.post<string>(`${this.apiUrl}/register`, request, {
         responseType: 'text' as 'json'
       });
-    }
+  }
 }

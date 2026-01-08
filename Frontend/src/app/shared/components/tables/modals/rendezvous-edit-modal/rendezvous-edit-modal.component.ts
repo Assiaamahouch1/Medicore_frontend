@@ -5,7 +5,7 @@ import { ButtonComponent } from '../../../ui/button/button.component';
 import { LabelComponent } from '../../../form/label/label.component';
 import { ModalComponent } from '../../../ui/modal/modal.component';
 import { RendezVous, RendezvousService } from '../../../../../../services/rendezvous.service';
-
+import { AuthService ,AuthAdmin} from './../../../../../../services/auth.service';
 @Component({
   selector: 'app-rendezvous-edit-modal',
   standalone: true,
@@ -29,15 +29,27 @@ export class RendezvousEditModalComponent implements OnChanges {
     dateRdv: '',
     heureRdv: '',
     motif: '',
-    notes: ''
+    notes: '',
+    cabinetId:0,
   };
+  user:AuthAdmin ={
+    nom: '',
+      prenom: '',
+      username: '',
+      numTel: '',
+      role: '',
+      avatar: '',
+    actif: true,
+    cabinetId: 0,
+  }
 
   isLoading: boolean = false;
   errorMessage: string = '';
 
-  constructor(private rendezvousService: RendezvousService) {}
+  constructor(private rendezvousService: RendezvousService, private authService: AuthService) {}
 
   ngOnChanges(changes: SimpleChanges) {
+      this.loadCurrentUser();
     if (changes['rendezvous'] && this.rendezvous) {
       // Convertir la date (java.util.Date → string YYYY-MM-DD)
       const dateStr = this.rendezvous.dateRdv
@@ -55,6 +67,19 @@ export class RendezvousEditModalComponent implements OnChanges {
       this.errorMessage = '';
     }
   }
+  
+  loadCurrentUser(): void {
+  this.authService.getCurrentAuth().subscribe({
+    next: (user) => {
+      this.user = user;
+      console.log('USER CHARGÉ:', this.user);
+    },
+    error: (err) => {
+      console.error('Erreur chargement user:', err);
+    }
+  });
+}
+
 
  handleSave() {
   if (!this.rendezvous?.idRdv) {
@@ -95,6 +120,7 @@ export class RendezvousEditModalComponent implements OnChanges {
     const notes = this.editedRendezvous.notes?.trim();
     updateData.notes = notes === '' ? '' : notes; // Envoie chaîne vide si effacé
   }
+  this.rendezvous.cabinetId=this.user.cabinetId;
 
   // Appel au service
   this.rendezvousService.updatePartiel(this.rendezvous.idRdv, updateData).subscribe({

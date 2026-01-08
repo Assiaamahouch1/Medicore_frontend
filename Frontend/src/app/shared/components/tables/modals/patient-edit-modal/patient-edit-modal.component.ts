@@ -5,7 +5,7 @@ import { LabelComponent } from '../../../form/label/label.component';
 import { ModalComponent } from '../../../ui/modal/modal.component';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-
+import { AuthService ,AuthAdmin} from './../../../../../../services/auth.service';
 @Component({
   selector: 'app-patient-edit-modal',
   imports: [ButtonComponent,
@@ -33,13 +33,26 @@ export class PatientEditModalComponent {
   mutuelleNumero: '',
   mutuelleExpireLe: new Date(),
   actif: true,
+  cabinetId:0
   };
+  user:AuthAdmin ={
+    nom: '',
+      prenom: '',
+      username: '',
+      numTel: '',
+      role: '',
+      avatar: '',
+    actif: true,
+    cabinetId: 0,
+  }
 
   selectedFile: File | null = null;
   isLoading: boolean = false;
   errorMessage: string = '';
 
-  constructor(private patientService:PatientService) {}
+  constructor(private patientService:PatientService,
+     private authService: AuthService
+  ) {}
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['patient'] && this.patient) {
@@ -50,7 +63,22 @@ export class PatientEditModalComponent {
     }
   }
 
- 
+  ngOnInit(): void {
+    this.loadCurrentUser();
+  }
+
+
+
+   loadCurrentUser(): void {
+    this.authService.getCurrentAuth().subscribe({
+      next: (user) => {
+        this.user = user;
+      },
+      error: (err) => {
+        console.error('❌ Erreur chargement user dropdown:', err);
+      }
+    });
+  }
 
 
   closeEditModal() {
@@ -60,6 +88,7 @@ export class PatientEditModalComponent {
 
   handleSave() {
   // Validation
+  this.editePatient.cabinetId=this.user.cabinetId;
   if (!this.editePatient.nom || !this.editePatient.prenom || !this.editePatient.dateNaissance  || !this.editePatient.numTel ||
       !this.editePatient.sexe ) {
     this.errorMessage = 'Tous les champs sont obligatoires';

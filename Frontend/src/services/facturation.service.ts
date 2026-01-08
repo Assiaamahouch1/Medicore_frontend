@@ -6,8 +6,8 @@ export interface Facturation {
   idFacture?: string;
   montant?: number;
   modePaiement: string;
-  rendezVousId: number;
-  date:string
+  rendezVousId: number | null;
+  date:string;
 }
 
 @Injectable({
