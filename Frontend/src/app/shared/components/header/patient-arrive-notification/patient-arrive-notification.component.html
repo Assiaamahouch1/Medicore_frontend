@@ -93,9 +93,4 @@
 </div>
 
 
-<app-dropdown-item
-  *ngFor="let alert of alerts; trackBy: trackByRdvId"
-  (click)="selectPatient(alert)"
->
-  {{ alert.patient?.nom }} {{ alert.patient?.prenom }}
-</app-dropdown-item>
+
