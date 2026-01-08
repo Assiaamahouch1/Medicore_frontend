@@ -39,7 +39,7 @@ export class UserDropdownComponent implements OnInit {
     this.loadCurrentUser();
   }
 
-  /**
+  /*
    * Charger l'utilisateur connecté
    */
   loadCurrentUser(): void {

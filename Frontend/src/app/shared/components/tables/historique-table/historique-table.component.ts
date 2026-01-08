@@ -6,7 +6,7 @@ import { ButtonComponent } from '../../ui/button/button.component';
 import { TableDropdownComponent } from '../../common/table-dropdown/table-dropdown.component';
 import { ModalService } from '../../../services/modal.service';
 import { PatientService , Patient } from '../../../../../services/patient.service';
-
+import { AuthService ,AuthAdmin} from './../../../../../services/auth.service';
 @Component({
   selector: 'app-historique-table',
   standalone: true,
@@ -32,19 +32,47 @@ export class HistoriqueTableComponent implements OnInit{
 
 
   isRestoreModalOpen = false;
-
+user:AuthAdmin ={
+  nom: '',
+    prenom: '',
+    username: '',
+    numTel: '',
+    role: '',
+    avatar: '',
+  actif: true,
+  cabinetId: 0,
+}
 
   constructor(
     public modal: ModalService,
-    private patientService: PatientService
+    private patientService: PatientService,
+     private authService: AuthService
   ) {}
 
-  ngOnInit() {
-    this.loadPatients();
+ ngOnInit() {
+    this.loadCurrentUser();
+    
   }
+  loadCurrentUser(): void {
+  this.authService.getCurrentAuth().subscribe({
+    next: (user) => {
+      this.user = user;
+      console.log('USER CHARGÉ:', this.user);
+    this.loadPatients();
+    },
+    error: (err) => {
+      console.error('Erreur chargement user:', err);
+    }
+  });
+}
+
 
   loadPatients(): void {
-    this.patientService.getAllNoActif().subscribe({
+      if (!this.user.cabinetId) {
+    console.warn('cabinetId non défini → requête annulée');
+    return;
+  }
+    this.patientService.getAllNoActif(this.user.cabinetId).subscribe({
       next: (data: Patient[]) => {
         this.transactionData = data;
         this.filteredData = [...data];

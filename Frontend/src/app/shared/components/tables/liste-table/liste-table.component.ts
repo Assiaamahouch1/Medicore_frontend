@@ -1,7 +1,3 @@
-import { RendezvousDeleteModalComponent } from './../modals/rendezvous-delete-modal/rendezvous-delete-modal.component';
-import { RendezvousEditModalComponent } from './../modals/rendezvous-edit-modal/rendezvous-edit-modal.component';
-import { RendezvousShowModalComponent } from './../modals/rendezvous-show-modal/rendezvous-show-modal.component';
-import { RendezvousAddModalComponent } from './../modals/rendezvous-add-modal/rendezvous-add-modal.component';
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -12,27 +8,19 @@ import { PatientService, Patient } from '../../../../../services/patient.service
 import { AuthService ,AuthAdmin} from './../../../../../services/auth.service';
 import { RendezVous, RendezvousService } from '../../../../../services/rendezvous.service';
 import { RendezvousPrintModalComponent } from '../modals/rendezvous-print-modal/rendezvous-print-modal.component';
-import { RendezvousCalendarModalComponent } from '../modals/rendezvous-calendar-modal/rendezvous-calendar-modal.component';
+
 @Component({
-  selector: 'app-rendezvous-table',
-  standalone: true,
+  selector: 'app-liste-table',
   imports: [
     CommonModule,
     FormsModule,
     ButtonComponent,
     TableDropdownComponent,
-    RendezvousCalendarModalComponent,
-    RendezvousAddModalComponent,
-    RendezvousDeleteModalComponent,
-    RendezvousEditModalComponent,
-    RendezvousShowModalComponent,
-    RendezvousPrintModalComponent
   ],
-  templateUrl: './rendezvous-table.component.html',
-  styles: ``
+  templateUrl: './liste-table.component.html',
 })
-export class RendezvousTableComponent implements OnInit {
-  patients: Patient[] = [];
+export class ListeTableComponent {
+ patients: Patient[] = [];
   transactionData: RendezVous[] = [];
   filteredData: RendezVous[] = [];
   selectedRendezvous: RendezVous | null = null;
@@ -105,7 +93,7 @@ user:AuthAdmin ={
     return;
   }
   
-    this.rendezvousservice.getAll(this.user.cabinetId).subscribe({
+    this.rendezvousservice.getRendezVousConfirme(this.user.cabinetId).subscribe({
       next: (data: RendezVous[]) => {
         this.transactionData = data;
         this.applyCurrentFilter();
@@ -113,6 +101,34 @@ user:AuthAdmin ={
       error: (error) => console.error('Erreur chargement rendez vous:', error)
     });
   }
+  // Ajoute cette méthode dans ta classe ListeTableComponent
+marquerCommeArrive(rdv: RendezVous) {
+  if (!rdv.idRdv) {
+    console.error('ID du rendez-vous manquant');
+    return;
+  }
+
+
+  this.rendezvousservice.setRendezVousArrive(rdv.idRdv).subscribe({
+    next: (rdvMisAJour) => {
+      // Mise à jour locale du RDV dans la liste
+      const index = this.transactionData.findIndex(item => item.idRdv=== rdv.idRdv);
+      if (index !== -1) {
+        this.transactionData[index] = rdvMisAJour;
+      }
+
+      // Réappliquer les filtres pour rafraîchir l'affichage
+      this.applyCurrentFilter();
+
+      // Optionnel : message de succès (tu peux utiliser un toast)
+      console.log('Patient marqué comme arrivé');
+    },
+    error: (err) => {
+      console.error('Erreur lors du marquage arrivé :', err);
+      alert('Erreur : impossible de marquer le patient comme arrivé');
+    }
+  });
+}
 
   // Afficher tous les RDV
   showAll() {
@@ -120,15 +136,7 @@ user:AuthAdmin ={
     this.dateInput = '';
     this.applyCurrentFilter();
   }
-  openPrintModal(rendezvous: RendezVous) {
-  this.selectedRendezvous = rendezvous;
-  this.isPrintModalOpen = true;
-}
-
-closePrintModal() {
-  this.isPrintModalOpen = false;
-  this.selectedRendezvous = null;
-}
+ 
 
   // Sélectionner aujourd'hui
   selectToday() {
@@ -195,55 +203,5 @@ closePrintModal() {
     }
   }
 
-  openAddModal() { 
-    this.selectedRendezvous = null;
-    this.isAddModalOpen = true; 
-  }
-  closeAddModal() { 
-    this.isAddModalOpen = false;
-    this.loadRendezVous(); 
-  }
-  openCalendarModal() {
-  this.isCalendarModalOpen = true;
-}
-
-closeCalendarModal() {
-  this.isCalendarModalOpen = false;
-}
-
-openRdvFromCalendar(rdv: RendezVous) {
-  this.selectedRendezvous = rdv;
-  this.isCalendarModalOpen = false;
-  // Optionnel : ouvrir le modal de détails ou d'impression
-  this.openPrintModal(rdv); // ou openShowModal(rdv)
-}
-
-  openEditModal(rendezvous: RendezVous) { 
-    this.selectedRendezvous = rendezvous;
-    this.isEditModalOpen = true; 
-  }
-  closeEditModal() { 
-    this.isEditModalOpen = false;
-    this.selectedRendezvous = null;
-    this.loadRendezVous(); 
-  }
-
-  openDeleteModal(rendezvous: RendezVous) { 
-    this.selectedRendezvous = rendezvous;
-    this.isDeleteModalOpen = true; 
-  }
-  closeDeleteModal(deleted: boolean = false) { 
-    this.isDeleteModalOpen = false;
-    this.selectedRendezvous = null;
-    if (deleted) this.loadRendezVous(); 
-  }
-
-  openShowModal(rendezvous: RendezVous) { 
-    this.selectedRendezvous = rendezvous;
-    this.isShowModalOpen = true; 
-  }
-  closeShowModal() { 
-    this.isShowModalOpen = false;
-    this.selectedRendezvous = null;
-  }
+ 
 }

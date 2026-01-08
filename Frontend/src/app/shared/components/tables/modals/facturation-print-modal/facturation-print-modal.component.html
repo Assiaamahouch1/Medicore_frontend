@@ -1,0 +1,54 @@
+<div class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
+  <div class="relative w-full max-w-lg rounded-2xl bg-white dark:bg-gray-900 shadow-2xl p-8">
+    <div class="text-center mb-8">
+      <h2 class="text-3xl font-extrabold text-green-700 dark:text-green-400">
+        Facture
+      </h2>
+      <p class="text-sm text-gray-500 dark:text-gray-400">Cabinet médical</p>
+    </div>
+
+    <div class="space-y-6 text-base">
+      <div class="flex justify-between border-b pb-3">
+        <span class="font-semibold text-gray-500">N° Facture</span>
+        <span class="font-bold">FAC-{{ (facturation.idFacture!).toString().padStart(4, '0') }}</span>
+      </div>
+
+      <div class="flex justify-between border-b pb-3">
+        <span class="font-semibold text-gray-500">Patient</span>
+        <span class="font-bold">{{ getPatientName() }}</span>
+      </div>
+
+      <div class="flex justify-between border-b pb-3" *ngIf="facturation.rendezVousId">
+        <span class="font-semibold text-gray-500">Rendez-vous</span>
+        <span>{{ facturation.rendezVousId }}</span>
+      </div>
+
+      <div class="flex justify-between border-b pb-3">
+        <span class="font-semibold text-gray-500">Date</span>
+        <span>{{ facturation.date | date:'fullDate':'':'fr' }}</span>
+      </div>
+
+      <div class="flex justify-between border-b pb-3">
+        <span class="font-semibold text-gray-500">Mode de paiement</span>
+        <span>{{ facturation.modePaiement || 'Non spécifié' }}</span>
+      </div>
+
+      <div class="flex justify-between items-center pt-4">
+        <span class="text-xl font-bold text-gray-700">Montant total</span>
+        <span class="text-2xl font-extrabold text-green-700">
+          {{ facturation.montant | number:'1.2-2' }} DH
+        </span>
+      </div>
+    </div>
+
+    <div class="mt-10 flex justify-between gap-4">
+      <button (click)="close.emit()" class="w-1/2 py-3 rounded-xl border border-gray-300 text-gray-700 hover:bg-gray-100 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-800">
+        Annuler
+      </button>
+
+      <button (click)="printPDF()" class="w-1/2 py-3 rounded-xl bg-green-700 text-white font-semibold hover:bg-green-800 flex items-center justify-center gap-2">
+        Générer le PDF
+      </button>
+    </div>
+  </div>
+</div>

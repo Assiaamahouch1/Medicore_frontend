@@ -20,6 +20,8 @@ import { RendezVousComponent } from './pages/secretaire/rendez-vous/rendez-vous.
 import { HistoriqueComponent } from './pages/secretaire/historique/historique.component';
 import { FacturationComponent } from './pages/secretaire/facturation/facturation.component';
 import { AppLayoutAdminComponent } from './shared/layout/app-layout-admin/app-layout-admin.component';
+import { ListeAttenteComponent } from './pages/secretaire/liste-attente/liste-attente.component';
+import { PatientDetailComponent } from './pages/Medecin/patient-detail/patient-detail.component';
 
 
 export const routes: Routes = [
@@ -92,6 +94,12 @@ export const routes: Routes = [
         canActivate: [AuthGuard],
         title: 'AngularRendez_Vous | TailAdmin'
       },
+      {
+        path: 'liste_attente',
+        component: ListeAttenteComponent,
+        canActivate: [AuthGuard],
+        title: 'AngularRendez_Vous | TailAdmin'
+      },
    
     ]
   },
@@ -133,7 +141,12 @@ export const routes: Routes = [
         canActivate: [AuthGuard],
         title: 'Angular Dashboard | TailAdmin'
       },
-      
+      {
+        path: 'espacepatients',
+        component: PatientDetailComponent,
+        canActivate: [AuthGuard],
+        title: 'Angular Dashboard | TailAdmin'
+      },
    
     ]
     

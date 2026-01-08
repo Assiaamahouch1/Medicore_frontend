@@ -92,6 +92,8 @@ export class SigninFormComponent {
          }
          else if(user.role=="SECRETAIRE"){
           this.router.navigate(['/patients']);
+         }else if(user.role="MEDECIN"){
+          this.router.navigate(['/dashboardmed'])
          }
 
           this.isLoading = false;

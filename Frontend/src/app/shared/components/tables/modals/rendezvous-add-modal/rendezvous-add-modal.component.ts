@@ -38,9 +38,10 @@ export class RendezvousAddModalComponent implements OnInit {
     motif: '',
     statut: 'EN_ATTENTE',
     notes: '',
-    patientId: 0,
+    patientId: '',
     userId: 0
   };
+
 
   user!: AuthAdmin;
 
@@ -57,7 +58,7 @@ export class RendezvousAddModalComponent implements OnInit {
 
   /* ================= Lifecycle ================= */
   ngOnInit(): void {
-    this.loadPatients();
+
     this.loadCurrentUser();
   }
 
@@ -67,6 +68,12 @@ export class RendezvousAddModalComponent implements OnInit {
       next: (user: AuthAdmin) => {
         this.user = user;
         this.rendezvous.userId = user.id; // ✅ affecté AVANT l'envoi
+        this.rendezvous.cabinetId=user.cabinetId
+            if (this.user.cabinetId) {
+        this.loadPatients();
+      }else{
+        console.error('Erreur chargement ');
+      }
       },
       error: (err) => {
         console.error('Erreur chargement utilisateur:', err);
@@ -75,41 +82,60 @@ export class RendezvousAddModalComponent implements OnInit {
     });
   }
 
-  /* ================= Load patients ================= */
-  loadPatients(): void {
-    this.patientService.getAll().subscribe({
-      next: (data: Patient[]) => {
-        this.patients = data;
-      },
-      error: (err) => {
-        console.error('Erreur chargement patients:', err);
-        this.errorMessage = 'Erreur lors du chargement des patients';
-      }
-    });
+ loadPatients(): void {
+  if (!this.user.cabinetId) {
+    console.warn('cabinetId non défini → requête annulée');
+    return;
   }
+
+  console.log('APPEL BACKEND AVEC cabinetId =', this.user.cabinetId);
+
+  this.patientService.getAll(this.user.cabinetId).subscribe({
+    next: (data) => {
+      console.log('PATIENTS REÇUS:', data);
+     this.patients=data;
+    },
+    error: (err) => {
+      console.error('Erreur chargement patients:', err);
+    }
+  });
+}
 
   /* ================= Save ================= */
-  handleSave(): void {
+ handleSave(): void {
 
-   
-
-    this.isLoading = true;
-    this.errorMessage = '';
-
-    console.log('Rendez-vous envoyé :', this.rendezvous);
-
-    this.rendezvousService.creerRendezVous(this.rendezvous).subscribe({
-      next: () => {
-        this.isLoading = false;
-        this.closeAddModal();
-      },
-      error: (error) => {
-        console.error('Erreur création rendez-vous:', error);
-        this.errorMessage = 'Erreur lors de la création du rendez-vous';
-        this.isLoading = false;
-      }
-    });
+  if (!this.rendezvous.patientId) {
+    this.errorMessage = 'Veuillez sélectionner un patient';
+    return;
   }
+
+  if (!this.rendezvous.userId) {
+    this.errorMessage = 'Utilisateur non valide';
+    return;
+  }
+
+  if (!this.rendezvous.dateRdv || !this.rendezvous.heureRdv) {
+    this.errorMessage = 'Date et heure obligatoires';
+    return;
+  }
+
+  this.isLoading = true;
+  this.errorMessage = '';
+
+  console.log('Rendez-vous envoyé :', this.rendezvous);
+
+  this.rendezvousService.creerRendezVous(this.rendezvous).subscribe({
+    next: () => {
+      this.isLoading = false;
+      this.closeAddModal();
+    },
+    error: (error) => {
+      console.error('Erreur création rendez-vous:', error);
+      this.errorMessage = 'Erreur lors de la création du rendez-vous';
+      this.isLoading = false;
+    }
+  });
+}
 
   /* ================= Close ================= */
   closeAddModal(): void {
@@ -124,9 +150,9 @@ export class RendezvousAddModalComponent implements OnInit {
       dateRdv: '',
       heureRdv: '',
       motif: '',
-      statut: '',
+      statut: 'EN_ATTENTE',
       notes: '',
-      patientId: 0,
+      patientId: '',
       userId: this.user?.id ?? 0
     };
     this.errorMessage = '';

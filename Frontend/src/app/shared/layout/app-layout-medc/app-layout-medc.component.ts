@@ -1,17 +1,18 @@
+import { AppHeaderMedecinComponent } from './../app-header-medecin/app-header-medecin.component';
 import { AppSidebarMedcComponent } from './../app-sidebarmedc/app-sidebarmedc.component';
 import { Component } from '@angular/core';
 import { SidebarService } from '../../services/sidebar.service';
 import { CommonModule } from '@angular/common';
 import { BackdropComponent } from '../backdrop/backdrop.component';
 import { RouterModule } from '@angular/router';
-import { AppHeaderComponent } from '../app-header/app-header.component';
+
 
 @Component({
   selector: 'app-layout-medc',
   imports: [
     CommonModule,
     RouterModule,
-    AppHeaderComponent,
+    AppHeaderMedecinComponent,
     AppSidebarMedcComponent,
     BackdropComponent
   ],
