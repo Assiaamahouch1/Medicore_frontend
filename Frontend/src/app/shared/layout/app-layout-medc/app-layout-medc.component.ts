@@ -1,4 +1,3 @@
-import { AppHeaderMedecinComponent } from './../app-header-medecin/app-header-medecin.component';
 import { AppSidebarMedcComponent } from './../app-sidebarmedc/app-sidebarmedc.component';
 import { Component } from '@angular/core';
 import { SidebarService } from '../../services/sidebar.service';
@@ -13,7 +12,7 @@ import { AppHeaderMedcComponent } from '../app-header-medc/app-header-medc.compo
   imports: [
     CommonModule,
     RouterModule,
-    AppHeaderMedecinComponent,
+    AppHeaderMedcComponent,
     AppSidebarMedcComponent,
     BackdropComponent
   ],

@@ -16,6 +16,8 @@ import { CommonModule } from '@angular/common';
 export class SecretaireAddModalComponent {
   @Input() isAddModalOpen: boolean = false; 
   @Output() close = new EventEmitter<void>();
+  @Input() cabinetId?: number;
+
 
   secretaire: Secretaire = {
     nom: '',
@@ -53,6 +55,11 @@ export class SecretaireAddModalComponent {
     if (!this.secretaire.nom || !this.secretaire.prenom || !this.secretaire.username  || !this.secretaire.numTel) {
       this.errorMessage = 'Tous les champs sont obligatoires';
       return;
+    }
+
+    // Assigner le cabinetId du médecin connecté
+    if (this.cabinetId) {
+      this.secretaire.cabinetId = this.cabinetId;
     }
 
     this.isLoading = true;

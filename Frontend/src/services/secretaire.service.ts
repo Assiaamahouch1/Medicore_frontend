@@ -11,6 +11,7 @@ export interface Secretaire {
   numTel: string;
   username: string;
   password?: string;
+  cabinetId?: number;
   
 }
 

@@ -9,6 +9,7 @@ import { SecretaireEditModalComponent } from '../modals/secretaire-edit-modal/se
 import { SecretaireDeleteModalComponent } from '../modals/secretaire-delete-modal/secretaire-delete-modal.component';
 import { SecretaireShowModalComponent } from '../modals/secretaire-show-modal/secretaire-show-modal.component';
 import { SecretaireService, Secretaire } from '../../../../../services/secretaire.service';
+import { AuthService } from '../../../../../services/auth.service';
 
 @Component({
   selector: 'app-secretaire-table',
@@ -38,7 +39,8 @@ export class SecretaireTableComponent implements OnInit {
 
   constructor(
     public modal: ModalService,
-    private secretaireService: SecretaireService
+    private secretaireService: SecretaireService,
+    private authService: AuthService
   ) {}
 
   isAddModalOpen = false;
@@ -89,30 +91,44 @@ export class SecretaireTableComponent implements OnInit {
     this.isShowModalOpen = false;
     this.selectedSecretaire = null;
   }
-
+  cabinetId?: number;
   ngOnInit() {
-    this.loadSecretaires();
-  }
+  this.authService.getCurrentAuth().subscribe({
+    next: (medecin) => {
+      this.cabinetId = medecin.cabinetId;
+      this.loadSecretaires();
+    },
+    error: (err) => console.error('Erreur récupération médecin:', err)
+  });
+}
 
   loadSecretaires(): void {
-    this.secretaireService.getAllSecretaires().subscribe({
-      next: (data: Secretaire[]) => {
-        console.log('Données brutes du backend:', data);
-        
-        this.transactionData = data;
-        this.filteredData = [...this.transactionData];
-        
-        data.forEach(secretaire => {
-          if (secretaire.id) {
-            this.loadSecretaireAvatar(secretaire.id, secretaire.avatar);
-          }
-        });
-      },
-      error: (error: any) => {
-        console.error('Erreur chargement secretaires:', error);
-      }
-    });
-  }
+  // Récupérer l'utilisateur courant
+  this.authService.getCurrentAuth().subscribe({
+    next: (medecin) => {
+      const cabinetId = medecin.cabinetId;
+      
+      // Récupérer toutes les secrétaires
+      this.secretaireService.getAllSecretaires().subscribe({
+        next: (data: Secretaire[]) => {
+          // Filtrer uniquement celles qui ont le même cabinetId
+          this.transactionData = data.filter(sec => sec.cabinetId === cabinetId);
+          this.filteredData = [...this.transactionData];
+
+          // Charger les avatars
+          this.transactionData.forEach(secretaire => {
+            if (secretaire.id) {
+              this.loadSecretaireAvatar(secretaire.id, secretaire.avatar);
+            }
+          });
+        },
+        error: (err) => console.error('Erreur chargement secretaires:', err)
+      });
+    },
+    error: (err) => console.error('Erreur récupération médecin:', err)
+  });
+}
+
 
   loadSecretaireAvatar(secretaireId: number, avatarFilename?: string): void {
     if (!avatarFilename) {
