@@ -53,8 +53,8 @@
       <li *ngFor="let alert of alerts; trackBy: trackByRdvId">
 
         <app-dropdown-item
-          (itemClick)="closeDropdown()"
-          [className]="'w-full text-left flex gap-3 rounded-lg p-4 hover:bg-gray-100 dark:hover:bg-white/5 border border-gray-100 dark:border-gray-800'"
+          (itemClick)="goToPatientDossier(alert.rdv.patientId)"
+          [className]="'w-full text-left flex gap-3 rounded-lg p-4 hover:bg-gray-100 dark:hover:bg-white/5 border border-gray-100 dark:border-gray-800 cursor-pointer'"
         >
           <div class="flex-shrink-0">
             <div class="w-10 h-10 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center">

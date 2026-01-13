@@ -1,0 +1,67 @@
+<div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+  <div class="flex justify-between items-center mb-4">
+    <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Dossier Médical</h2>
+    <app-button (click)="onEdit()" class="bg-gray-600 text-white">
+      {{ documentMedical ? 'Modifier' : 'Créer' }}
+    </app-button>
+  </div>
+
+  <!-- Formulaire dossier médical -->
+  <div *ngIf="showForm && editingDocument" class="mb-6 p-4 bg-gray-50 dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-700">
+    <h3 class="text-md font-semibold text-gray-900 dark:text-white mb-4">{{ documentMedical ? 'Modifier' : 'Créer' }} Dossier Médical</h3>
+    <div class="space-y-4">
+      <div>
+        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Antécédents Médicaux</label>
+        <textarea [(ngModel)]="editingDocument.antMedicaux" rows="3" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white"></textarea>
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Antécédents Chirurgicaux</label>
+        <textarea [(ngModel)]="editingDocument.antChirug" rows="3" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white"></textarea>
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Allergies</label>
+        <textarea [(ngModel)]="editingDocument.allergies" rows="2" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white"></textarea>
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Traitements en cours</label>
+        <textarea [(ngModel)]="editingDocument.traitement" rows="3" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white"></textarea>
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Habitudes</label>
+        <textarea [(ngModel)]="editingDocument.habitudes" rows="2" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white"></textarea>
+      </div>
+      <div class="flex gap-2">
+        <app-button (click)="onSave()" class="bg-primary text-white">Enregistrer</app-button>
+        <app-button (click)="onCancel()" class="bg-gray-500 text-white">Annuler</app-button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Affichage dossier médical -->
+  <div *ngIf="documentMedical && !showForm" class="space-y-4">
+    <div>
+      <label class="text-sm font-medium text-gray-500 dark:text-gray-400">Antécédents Médicaux</label>
+      <p class="text-gray-900 dark:text-white mt-1">{{ documentMedical.antMedicaux || '-' }}</p>
+    </div>
+    <div>
+      <label class="text-sm font-medium text-gray-500 dark:text-gray-400">Antécédents Chirurgicaux</label>
+      <p class="text-gray-900 dark:text-white mt-1">{{ documentMedical.antChirug || '-' }}</p>
+    </div>
+    <div>
+      <label class="text-sm font-medium text-gray-500 dark:text-gray-400">Allergies</label>
+      <p class="text-gray-900 dark:text-white mt-1">{{ documentMedical.allergies || '-' }}</p>
+    </div>
+    <div>
+      <label class="text-sm font-medium text-gray-500 dark:text-gray-400">Traitements en cours</label>
+      <p class="text-gray-900 dark:text-white mt-1">{{ documentMedical.traitement || '-' }}</p>
+    </div>
+    <div>
+      <label class="text-sm font-medium text-gray-500 dark:text-gray-400">Habitudes</label>
+      <p class="text-gray-900 dark:text-white mt-1">{{ documentMedical.habitudes || '-' }}</p>
+    </div>
+  </div>
+  <div *ngIf="!documentMedical && !showForm" class="text-center py-8 text-gray-500 dark:text-gray-400">
+    Aucun dossier médical enregistré. Cliquez sur "Créer" pour en créer un.
+  </div>
+</div>
+

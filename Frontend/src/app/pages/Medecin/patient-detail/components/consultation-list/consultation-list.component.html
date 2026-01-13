@@ -1,0 +1,55 @@
+<div class="space-y-4">
+    <div *ngFor="let consultation of consultations; let i = index" class="p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:shadow-md transition-shadow">
+      <div class="flex justify-between items-start mb-3">
+        <div>
+          <h3 class="font-semibold text-gray-900 dark:text-white">{{ consultation.type || 'Consultation' }}</h3>
+          <p class="text-sm text-gray-500 dark:text-gray-400">{{ formatDate(consultation.dateConsultation) }}</p>
+        </div>
+        <app-button (click)="onCreateOrdonnance(consultation.id!)" class="bg-green-600 text-white text-sm">
+          Créer Ordonnance
+        </app-button>
+      </div>
+      <div class="space-y-3 text-sm">
+        <div *ngIf="consultation.examenClinique">
+          <span class="font-medium text-gray-700 dark:text-gray-300">Examen Clinique:</span>
+          <p class="text-gray-600 dark:text-gray-400 mt-1">{{ consultation.examenClinique }}</p>
+        </div>
+        <div *ngIf="consultation.examenComplementaire">
+          <span class="font-medium text-gray-700 dark:text-gray-300">Examen Complémentaire:</span>
+          <p class="text-gray-600 dark:text-gray-400 mt-1">{{ consultation.examenComplementaire }}</p>
+        </div>
+        <div *ngIf="consultation.diagnostic">
+          <span class="font-medium text-gray-700 dark:text-gray-300">Diagnostic:</span>
+          <p class="text-gray-600 dark:text-gray-400 mt-1">{{ consultation.diagnostic }}</p>
+        </div>
+        <div *ngIf="consultation.traitement">
+          <span class="font-medium text-gray-700 dark:text-gray-300">Traitement:</span>
+          <p class="text-gray-600 dark:text-gray-400 mt-1">{{ consultation.traitement }}</p>
+        </div>
+        <div *ngIf="consultation.observations">
+          <span class="font-medium text-gray-700 dark:text-gray-300">Observations:</span>
+          <p class="text-gray-600 dark:text-gray-400 mt-1">{{ consultation.observations }}</p>
+        </div>
+      </div>
+      
+      <!-- Ordonnances de cette consultation -->
+      <div *ngIf="getOrdonnancesForConsultation(consultation.id).length > 0" class="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
+        <h4 class="text-sm font-semibold text-gray-900 dark:text-white mb-2">Ordonnances</h4>
+        <div *ngFor="let ordonnance of getOrdonnancesForConsultation(consultation.id)" class="p-3 bg-gray-50 dark:bg-gray-900 rounded mb-2">
+          <div class="mb-2">
+            <h5 class="font-medium text-gray-900 dark:text-white">{{ ordonnance.type || 'Ordonnance' }}</h5>
+            <p class="text-xs text-gray-500 dark:text-gray-400">{{ formatDate(ordonnance.date) }}</p>
+          </div>
+          <div *ngIf="ordonnance.lignes && ordonnance.lignes.length > 0" class="space-y-1">
+            <div *ngFor="let ligne of ordonnance.lignes" class="p-2 bg-white dark:bg-gray-800 rounded text-sm">
+              <p class="text-gray-900 dark:text-white">{{ ligne.description }}</p>
+              <p class="text-xs text-gray-500 dark:text-gray-400">Dosage: {{ ligne.dosage }} - Durée: {{ ligne.duree }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="consultations.length === 0" class="text-center py-8 text-gray-500 dark:text-gray-400">
+      Aucune consultation enregistrée
+    </div>
+</div>

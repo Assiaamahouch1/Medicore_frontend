@@ -1,0 +1,92 @@
+<div class="p-6">
+  <!-- Header -->
+  <div class="mb-6">
+    <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Espace Patients</h1>
+    <p class="text-gray-600 dark:text-gray-400">Gérez les consultations, ordonnances et dossiers médicaux</p>
+  </div>
+
+  <!-- Onglets -->
+  <div class="mb-6 border-b border-gray-200 dark:border-gray-700">
+    <nav class="flex space-x-8">
+      <button
+        (click)="activeTab = 'liste'"
+        [class.border-b-2]="activeTab === 'liste'"
+        [class.border-primary]="activeTab === 'liste'"
+        [class.text-primary]="activeTab === 'liste'"
+        class="px-1 py-4 text-sm font-medium text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300 border-b-2 border-transparent transition-colors">
+        Liste des Patients
+      </button>
+      <button
+        *ngIf="selectedPatient"
+        (click)="activeTab = 'dossier'"
+        [class.border-b-2]="activeTab === 'dossier'"
+        [class.border-primary]="activeTab === 'dossier'"
+        [class.text-primary]="activeTab === 'dossier'"
+        class="px-1 py-4 text-sm font-medium text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300 border-b-2 border-transparent transition-colors">
+        Dossier Médical - {{ selectedPatient.nom }} {{ selectedPatient.prenom }}
+      </button>
+    </nav>
+  </div>
+
+  <!-- Liste des Patients -->
+  <div *ngIf="activeTab === 'liste'">
+    <app-patient-list
+      [patients]="patients"
+      [patientsArrives]="patientsArrives"
+      (patientSelected)="selectPatient($event)">
+    </app-patient-list>
+  </div>
+
+  <!-- Dossier Médical -->
+  <div *ngIf="activeTab === 'dossier' && selectedPatient" class="space-y-6">
+    <!-- Informations patient -->
+    <app-patient-info [patient]="selectedPatient"></app-patient-info>
+
+    <!-- Section Consultations -->
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+      <div class="flex justify-between items-center mb-6">
+        <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Consultations</h2>
+        <app-button (click)="openConsultationForm()" class="bg-primary text-white">
+          + Ajouter une Consultation
+        </app-button>
+      </div>
+
+      <!-- Liste des consultations -->
+      <div *ngIf="loadingConsultations" class="text-center py-8">
+        <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+        <p class="mt-4 text-gray-500 dark:text-gray-400">Chargement des consultations...</p>
+      </div>
+      
+      <div *ngIf="!loadingConsultations">
+        <app-consultation-list
+          [consultations]="consultations"
+          [ordonnances]="ordonnances"
+          (createOrdonnance)="openOrdonnanceForm($event)">
+        </app-consultation-list>
+      </div>
+    </div>
+
+    <!-- Modal Formulaire consultation -->
+    <app-consultation-form
+      [consultation]="newConsultation"
+      [show]="showConsultationForm"
+      (save)="saveConsultation($event)"
+      (cancel)="cancelConsultationForm()">
+    </app-consultation-form>
+
+    <!-- Formulaire ordonnance -->
+    <app-ordonnance-form
+      [ordonnance]="newOrdonnance"
+      [show]="showOrdonnanceForm"
+      (save)="saveOrdonnance($event)"
+      (cancel)="cancelOrdonnanceForm()">
+    </app-ordonnance-form>
+
+    <!-- Dossier Médical -->
+    <app-medical-record
+      [documentMedical]="documentMedical"
+      [patientId]="selectedPatient.id || ''"
+      (save)="saveDocument($event)">
+    </app-medical-record>
+  </div>
+</div>

@@ -1,0 +1,30 @@
+<div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+  <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Informations Patient</h2>
+  <div *ngIf="patient" class="grid grid-cols-2 gap-4">
+    <div>
+      <label class="text-sm font-medium text-gray-500 dark:text-gray-400">Nom complet</label>
+      <p class="text-gray-900 dark:text-white">{{ patient.nom }} {{ patient.prenom }}</p>
+    </div>
+    <div>
+      <label class="text-sm font-medium text-gray-500 dark:text-gray-400">CIN</label>
+      <p class="text-gray-900 dark:text-white">{{ patient.cin || '-' }}</p>
+    </div>
+    <div>
+      <label class="text-sm font-medium text-gray-500 dark:text-gray-400">Date de naissance</label>
+      <p class="text-gray-900 dark:text-white">{{ formatDate(patient.dateNaissance) }}</p>
+    </div>
+    <div>
+      <label class="text-sm font-medium text-gray-500 dark:text-gray-400">Téléphone</label>
+      <p class="text-gray-900 dark:text-white">{{ patient.numTel || '-' }}</p>
+    </div>
+    <div>
+      <label class="text-sm font-medium text-gray-500 dark:text-gray-400">Email</label>
+      <p class="text-gray-900 dark:text-white">{{ patient.email || '-' }}</p>
+    </div>
+    <div>
+      <label class="text-sm font-medium text-gray-500 dark:text-gray-400">Adresse</label>
+      <p class="text-gray-900 dark:text-white">{{ patient.adresse || '-' }}</p>
+    </div>
+  </div>
+</div>
+

@@ -161,6 +161,12 @@ export const routes: Routes = [
         canActivate: [AuthGuard],
         title: 'Angular Dashboard | TailAdmin'
       },
+      {
+        path: 'espacepatients/:id',
+        component: PatientDetailComponent,
+        canActivate: [AuthGuard],
+        title: 'Dossier Patient | TailAdmin'
+      },
    
     ]
     

@@ -128,4 +128,12 @@ export class PatientArriveNotificationComponent implements OnInit, OnDestroy {
   closeDropdown() {
     this.isOpen = false;
   }
+
+
+  goToPatientDossier(patientId: string | number | undefined) {
+    if (patientId) {
+      this.closeDropdown();
+      this.router.navigate(['/espacepatients', patientId]);
+    }
+  }
 }

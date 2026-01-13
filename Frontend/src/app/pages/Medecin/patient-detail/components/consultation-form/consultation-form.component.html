@@ -1,0 +1,54 @@
+<!-- Modal Overlay -->
+<div *ngIf="show" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50" (click)="onCancel()">
+  <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-3xl w-full mx-4 max-h-[90vh] overflow-y-auto" (click)="$event.stopPropagation()">
+    <!-- Modal Header -->
+    <div class="flex justify-between items-center p-6 border-b border-gray-200 dark:border-gray-700">
+      <h3 class="text-xl font-semibold text-gray-900 dark:text-white">Nouvelle Consultation</h3>
+      <button (click)="onCancel()" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Modal Body -->
+    <div class="p-6">
+      <div class="space-y-4">
+        <div>
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Type</label>
+          <input type="text" [(ngModel)]="consultation.type" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white">
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Date</label>
+          <input type="date" [value]="getDateString(consultation.dateConsultation)" (input)="onDateChange($event)" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white">
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Examen Clinique</label>
+          <textarea [(ngModel)]="consultation.examenClinique" rows="3" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white"></textarea>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Examen Complémentaire</label>
+          <textarea [(ngModel)]="consultation.examenComplementaire" rows="3" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white"></textarea>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Diagnostic</label>
+          <textarea [(ngModel)]="consultation.diagnostic" rows="2" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white"></textarea>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Traitement</label>
+          <textarea [(ngModel)]="consultation.traitement" rows="3" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white"></textarea>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Observations</label>
+          <textarea [(ngModel)]="consultation.observations" rows="3" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white"></textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal Footer -->
+    <div class="flex justify-end gap-3 p-6 border-t border-gray-200 dark:border-gray-700">
+      <app-button (click)="onCancel()" class="bg-gray-500 text-white">Annuler</app-button>
+      <app-button (click)="onSave()" class="bg-primary text-white">Enregistrer</app-button>
+    </div>
+  </div>
+</div>

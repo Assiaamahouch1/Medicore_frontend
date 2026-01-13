@@ -9,7 +9,7 @@ export interface Consultation {
   examenClinique?: string;
   examenComplementaire?: string;
   diagnostic?: string;
-  traitement?: boolean;
+  traitement?: string; 
   observations?: string; 
   patientId?:string;
 }
@@ -22,6 +22,35 @@ export interface DocumentMedical {
   traitement: string;
   habitudes: string;
   patientId:string;
+}
+export interface LigneOrdonnance {
+  id?: string;
+  description?: string;
+  dosage?: string;
+  duree?: string;
+  ordonnanceId?: string;
+  medicamentId?: string;
+}
+
+export interface Ordonnance {
+  id?: string;
+  date?: Date;
+  type?: string;
+  consultationId?: string;
+  lignes?: LigneOrdonnance[];
+}
+
+export interface CreateOrdonnanceRequest {
+  consultationId: string;
+  type?: string;
+  lignes?: CreateLigneOrdonnanceRequest[];
+}
+
+export interface CreateLigneOrdonnanceRequest {
+  description?: string;
+  dosage?: string;
+  duree?: string;
+  medicamentId?: string;
 }
 
 @Injectable({
@@ -65,6 +94,19 @@ createDoc(cons: DocumentMedical): Observable<DocumentMedical> {
 
 updateDoc(doc: DocumentMedical): Observable<DocumentMedical> {
     return this.http.put<DocumentMedical>(`${this.apiUrl}/updateDoc/${doc.id}`, doc);
+  }
+
+   // Ordonnances
+  getOrdonnancesByConsultation(consultationId: string): Observable<Ordonnance[]> {
+    return this.http.get<Ordonnance[]>(`${this.apiUrl}/ordonance/${consultationId}`);
+  }
+
+  createOrdonnance(request: CreateOrdonnanceRequest): Observable<Ordonnance> {
+    return this.http.post<Ordonnance>(`${this.apiUrl}/createOrdonnance`, request);
+  }
+
+  getLignesOrdonnance(ordonnanceId: string): Observable<LigneOrdonnance[]> {
+    return this.http.get<LigneOrdonnance[]>(`${this.apiUrl}/ligne/${ordonnanceId}`);
   }
 
 }
