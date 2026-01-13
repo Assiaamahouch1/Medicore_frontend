@@ -19,6 +19,15 @@ export interface SubscriptionStatus {
   daysRemaining: number;
 }
 
+export interface AdminDashboardStats {
+  totalCabinets: number;
+  cabinetsActifs: number;
+  cabinetsInactifs: number;
+  cabinetsExpirantBientot: number;
+  repartitionParSpecialite: { [key: string]: number };
+  cabinetsExpires: number;
+}
+
 export interface Page<T> {
   content: T[];
   totalElements: number;
@@ -113,5 +122,21 @@ export class CabinetService {
     return this.http.get<Cabinet[]>(`${this.apiUrl}/alerts/expiring`, {
       params: new HttpParams().set('days', days.toString())
     });
+  }
+
+  // ============ DASHBOARD ADMIN STATS ============
+
+  /**
+   * Récupère les statistiques globales pour le dashboard SuperAdmin
+   */
+  getDashboardStats(): Observable<AdminDashboardStats> {
+    return this.http.get<AdminDashboardStats>(`${this.apiUrl}/stats/dashboard`);
+  }
+
+  /**
+   * Récupère les statistiques d'un cabinet spécifique (pour Admin de cabinet)
+   */
+  getCabinetStats(cabinetId: number): Observable<Cabinet> {
+    return this.http.get<Cabinet>(`${this.apiUrl}/stats/cabinet/${cabinetId}`);
   }
 }

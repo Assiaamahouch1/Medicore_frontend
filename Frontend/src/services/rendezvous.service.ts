@@ -14,6 +14,20 @@ export interface RendezVous {
   cabinetId?:number;
 }
 
+export interface DashboardStats {
+  patientsEnAttenteSalle: number;
+  rdvConfirmesAujourdhui: number;
+  rdvEnAttenteConfirmation: number;
+  consultationsAujourdhui: number;
+  totalRdvJour: number;
+}
+
+export interface ConsultationStats {
+  date: string;
+  jour: string;
+  count: number;
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -70,5 +84,28 @@ getRendezVousArrive(cabinetId: number) {
 
 setRendezVousArrive(idRdv: number) {
   return this.http.put<RendezVous>(`${this.apiUrl}/Arrive/${idRdv}`,{});
+}
+
+// ============ DASHBOARD STATS METHODS ============
+
+/**
+ * Récupère les statistiques pour le dashboard médecin
+ */
+getDashboardStats(cabinetId: number): Observable<DashboardStats> {
+  return this.http.get<DashboardStats>(`${this.apiUrl}/stats/dashboard/${cabinetId}`);
+}
+
+/**
+ * Récupère les statistiques des consultations sur les 7 derniers jours
+ */
+getConsultationsWeekStats(cabinetId: number): Observable<ConsultationStats[]> {
+  return this.http.get<ConsultationStats[]>(`${this.apiUrl}/stats/consultations-week/${cabinetId}`);
+}
+
+/**
+ * Récupère la répartition des types de consultations (par motif)
+ */
+getTypesRepartition(cabinetId: number): Observable<{ [key: string]: number }> {
+  return this.http.get<{ [key: string]: number }>(`${this.apiUrl}/stats/types-repartition/${cabinetId}`);
 }
 }
