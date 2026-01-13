@@ -48,6 +48,7 @@ export class OrdonnanceFormComponent {
 
   onSave() {
     this.save.emit(this.ordonnance);
+    window.location.reload();
   }
 
   onCancel() {

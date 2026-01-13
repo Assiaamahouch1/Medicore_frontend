@@ -1,49 +1,181 @@
-<div *ngIf="show" class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
-  <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Nouvelle Ordonnance</h2>
-  <div class="space-y-4">
-    <div>
-      <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Type</label>
-      <input type="text" [(ngModel)]="ordonnance.type" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white">
-    </div>
-    
-    <div class="border-t border-gray-200 dark:border-gray-700 pt-4">
-      <h3 class="text-md font-semibold text-gray-900 dark:text-white mb-3">Lignes d'ordonnance</h3>
-      <div class="space-y-3 mb-4">
-        <div *ngFor="let ligne of ordonnance.lignes; let i = index" class="p-3 bg-gray-50 dark:bg-gray-900 rounded border border-gray-200 dark:border-gray-700">
-          <div class="flex justify-between items-start mb-2">
-            <span class="font-medium text-gray-900 dark:text-white">Ligne {{ i + 1 }}</span>
-            <button (click)="removeLigne(i)" class="text-red-600 hover:text-red-800">Supprimer</button>
+<!-- Modal Overlay -->
+<div *ngIf="show" class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4" (click)="onCancel()">
+  <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden flex flex-col" (click)="$event.stopPropagation()">
+    <!-- Modal Header avec gradient -->
+    <div class="bg-gradient-to-r from-green-600 to-emerald-700 dark:from-green-800 dark:to-emerald-900 px-6 py-5">
+      <div class="flex justify-between items-center">
+        <div class="flex items-center gap-3">
+          <div class="w-12 h-12 rounded-full bg-white/20 flex items-center justify-center">
+            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+            </svg>
           </div>
-          <p class="text-sm text-gray-600 dark:text-gray-400">{{ ligne.description }}</p>
-          <p class="text-sm text-gray-500 dark:text-gray-500">Dosage: {{ ligne.dosage }} - Durée: {{ ligne.duree }}</p>
+          <h3 class="text-2xl font-bold text-white">Nouvelle Ordonnance</h3>
         </div>
-      </div>
-      
-      <div class="p-4 bg-gray-50 dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-700">
-        <h4 class="text-sm font-semibold text-gray-900 dark:text-white mb-3">Ajouter une ligne</h4>
-        <div class="space-y-3">
-          <div>
-            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Description</label>
-            <input type="text" [(ngModel)]="newLigne.description" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white">
-          </div>
-          <div class="grid grid-cols-2 gap-3">
-            <div>
-              <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Dosage</label>
-              <input type="text" [(ngModel)]="newLigne.dosage" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white">
-            </div>
-            <div>
-              <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Durée</label>
-              <input type="text" [(ngModel)]="newLigne.duree" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white">
-            </div>
-          </div>
-          <app-button (click)="addLigne()" class="bg-blue-600 text-white">Ajouter la ligne</app-button>
-        </div>
+        <button 
+          (click)="onCancel()" 
+          class="w-10 h-10 rounded-full bg-white/20 hover:bg-white/30 text-white transition-colors flex items-center justify-center">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+        </button>
       </div>
     </div>
-    
-    <div class="flex gap-2">
-      <app-button (click)="onSave()" class="bg-primary text-white">Enregistrer l'ordonnance</app-button>
-      <app-button (click)="onCancel()" class="bg-gray-500 text-white">Annuler</app-button>
+
+    <!-- Modal Body avec scroll -->
+    <div class="flex-1 overflow-y-auto p-6 bg-gray-50 dark:bg-gray-900/50">
+      <div class="space-y-6">
+        <!-- Type d'ordonnance -->
+        <div class="bg-white dark:bg-gray-800 rounded-xl p-5 border-2 border-green-200 dark:border-green-800">
+          <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3 flex items-center gap-2">
+            <svg class="w-5 h-5 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path>
+            </svg>
+            Type d'Ordonnance
+          </label>
+          <input 
+            type="text" 
+            [(ngModel)]="ordonnance.type" 
+            placeholder="Ex: Ordonnance standard, Ordonnance renouvelable..."
+            class="w-full px-4 py-3 border-2 border-gray-300 dark:border-gray-600 rounded-xl dark:bg-gray-700 dark:text-white focus:border-green-500 focus:ring-2 focus:ring-green-200 dark:focus:ring-green-800 transition-all outline-none">
+        </div>
+        
+        <!-- Lignes d'ordonnance existantes -->
+        <div *ngIf="ordonnance.lignes && ordonnance.lignes.length > 0" class="space-y-3">
+          <div class="flex items-center gap-2 mb-4">
+            <svg class="w-5 h-5 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+            </svg>
+            <h3 class="text-lg font-bold text-gray-900 dark:text-white">Lignes d'ordonnance</h3>
+            <span class="px-3 py-1 bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300 text-sm font-semibold rounded-full">
+              {{ ordonnance.lignes.length }}
+            </span>
+          </div>
+          
+          <div class="space-y-3">
+            <div *ngFor="let ligne of ordonnance.lignes; let i = index" 
+                 class="bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 rounded-xl p-4 border-l-4 border-green-500 shadow-sm">
+              <div class="flex justify-between items-start mb-3">
+                <div class="flex items-center gap-3">
+                  <div class="w-8 h-8 rounded-full bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400 text-sm font-bold flex items-center justify-center">
+                    {{ i + 1 }}
+                  </div>
+                  <span class="font-semibold text-gray-900 dark:text-white">Ligne {{ i + 1 }}</span>
+                </div>
+                <button 
+                  (click)="removeLigne(i)" 
+                  class="px-3 py-1.5 bg-red-100 hover:bg-red-200 dark:bg-red-900/30 dark:hover:bg-red-900/50 text-red-600 dark:text-red-400 rounded-lg text-sm font-semibold transition-colors flex items-center gap-1">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                  </svg>
+                  Supprimer
+                </button>
+              </div>
+              <div class="pl-11 space-y-2">
+                <p class="text-sm font-semibold text-gray-900 dark:text-white">{{ ligne.description || 'Sans description' }}</p>
+                <div class="flex gap-4 text-xs text-gray-600 dark:text-gray-400">
+                  <span *ngIf="ligne.dosage" class="flex items-center gap-1">
+                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path>
+                    </svg>
+                    <strong>Dosage:</strong> {{ ligne.dosage }}
+                  </span>
+                  <span *ngIf="ligne.duree" class="flex items-center gap-1">
+                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    <strong>Durée:</strong> {{ ligne.duree }}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Formulaire d'ajout de ligne -->
+        <div class="bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-xl p-5 border-2 border-blue-200 dark:border-blue-800">
+          <div class="flex items-center gap-2 mb-4">
+            <svg class="w-5 h-5 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+            </svg>
+            <h4 class="text-lg font-bold text-blue-900 dark:text-blue-200">Ajouter une ligne d'ordonnance</h4>
+          </div>
+          
+          <div class="space-y-4">
+            <div>
+              <label class="block text-sm font-semibold text-blue-800 dark:text-blue-300 mb-2 flex items-center gap-2">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
+                Description du médicament / Prescription
+              </label>
+              <input 
+                type="text" 
+                [(ngModel)]="newLigne.description" 
+                placeholder="Ex: Paracétamol 500mg, Amoxicilline 1g..."
+                class="w-full px-4 py-3 border-2 border-blue-200 dark:border-blue-800 rounded-xl bg-white dark:bg-gray-800 dark:text-white focus:border-blue-500 focus:ring-2 focus:ring-blue-200 dark:focus:ring-blue-800 transition-all outline-none">
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-sm font-semibold text-blue-800 dark:text-blue-300 mb-2 flex items-center gap-2">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path>
+                  </svg>
+                  Dosage
+                </label>
+                <input 
+                  type="text" 
+                  [(ngModel)]="newLigne.dosage" 
+                  placeholder="Ex: 1 comprimé, 2 fois par jour"
+                  class="w-full px-4 py-3 border-2 border-blue-200 dark:border-blue-800 rounded-xl bg-white dark:bg-gray-800 dark:text-white focus:border-blue-500 focus:ring-2 focus:ring-blue-200 dark:focus:ring-blue-800 transition-all outline-none">
+              </div>
+              <div>
+                <label class="block text-sm font-semibold text-blue-800 dark:text-blue-300 mb-2 flex items-center gap-2">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                  </svg>
+                  Durée du traitement
+                </label>
+                <input 
+                  type="text" 
+                  [(ngModel)]="newLigne.duree" 
+                  placeholder="Ex: 7 jours, 2 semaines..."
+                  class="w-full px-4 py-3 border-2 border-blue-200 dark:border-blue-800 rounded-xl bg-white dark:bg-gray-800 dark:text-white focus:border-blue-500 focus:ring-2 focus:ring-blue-200 dark:focus:ring-blue-800 transition-all outline-none">
+              </div>
+            </div>
+            
+            <button
+              (click)="addLigne()"
+              class="w-full px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold rounded-xl transition-all duration-200 shadow-md hover:shadow-lg flex items-center justify-center gap-2">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+              </svg>
+              Ajouter la ligne
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal Footer -->
+    <div class="px-6 py-4 bg-gray-100 dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700 flex justify-end gap-3">
+      <button
+        (click)="onCancel()"
+        class="px-6 py-3 bg-gray-500 hover:bg-gray-600 text-white font-semibold rounded-xl transition-all duration-200 shadow-md hover:shadow-lg flex items-center gap-2">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
+        Annuler
+      </button>
+      <button
+        (click)="onSave()"
+        class="px-6 py-3 bg-gradient-to-r from-green-600 to-emerald-700 hover:from-green-700 hover:to-emerald-800 text-white font-semibold rounded-xl transition-all duration-200 shadow-md hover:shadow-lg flex items-center gap-2">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+        </svg>
+        Enregistrer l'ordonnance
+      </button>
     </div>
   </div>
 </div>
