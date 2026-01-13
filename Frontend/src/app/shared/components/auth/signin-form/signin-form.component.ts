@@ -80,22 +80,19 @@ export class SigninFormComponent {
           sessionStorage.setItem('role', user.role); // stocke 'SUPERADMIN' ou 'ADMIN'
           console.log('Role de l’utilisateur :', user.role);
 
-          if(user.role=="SUPERADMIN")
-
-         {
-           this.router.navigate(['/dashboard']);
+        if(user.role=="MEDECIN"){
+           this.router.navigate(['/dashboardmed']);
          }
-         if(user.role=="ADMIN")
-
+         else if(user.role=="ADMIN")
          {
            this.router.navigate(['/dashboardadmin']);
          }
          else if(user.role=="SECRETAIRE"){
           this.router.navigate(['/patients']);
-         }else if(user.role="MEDECIN"){
-          this.router.navigate(['/dashboardmed'])
-         }
 
+         }else if(user.role="SUPERADMIN"){
+          this.router.navigate(['/dashboard'])
+         }
           this.isLoading = false;
         },
         error: (err) => {

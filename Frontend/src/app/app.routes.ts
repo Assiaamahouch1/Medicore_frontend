@@ -13,6 +13,8 @@ import { ResetComponent } from './pages/auth-pages/reset-password/reset-password
 import { AuthGuard } from './guard/authGuard.component';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { DashboardAdminComponent } from './pages/admin/dashboard/dashboard.component';
+import { BasicSecrTablesComponent } from './pages/Medecin/secretaire/secretaire.component';
+import { ProfileMedcComponent } from './pages/Medecin/profilemedc/profilemedc.component';
 
 import { AppLayoutSecrComponent } from './shared/layout/app-layout-secr/app-layout-secr.component';
 import { PatientComponent } from './pages/secretaire/patient/patient.component';
@@ -140,6 +142,18 @@ export const routes: Routes = [
         component: DashboardMedComponent,
         canActivate: [AuthGuard],
         title: 'Angular Dashboard | TailAdmin'
+      },
+      {
+        path: 'secretaires',
+        component: BasicSecrTablesComponent,
+        canActivate: [AuthGuard],
+        title: 'Angular secretaires | Tailsecretaires'
+},
+{
+        path: 'profilemedc',
+        component: ProfileMedcComponent,
+        canActivate: [AuthGuard],
+        title: 'Angular Profile | TailAdmin'
       },
       {
         path: 'espacepatients',
