@@ -1,0 +1,343 @@
+<!-- Page d'accueil MediCore - Design épuré et cohérent -->
+<div class="min-h-screen bg-gray-50 dark:bg-gray-900">
+  
+  <!-- Header Simple -->
+  <header class="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16">
+        <!-- Logo -->
+        <div class="flex items-center gap-3">
+          <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-brand-500">
+            <svg class="h-6 w-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+            </svg>
+          </div>
+          <span class="text-xl font-bold text-gray-900 dark:text-white">MediCore</span>
+        </div>
+
+        <!-- Bouton Connexion -->
+        <a routerLink="/signin" 
+           class="inline-flex items-center gap-2 rounded-lg bg-brand-500 px-4 py-2 text-sm font-medium text-white hover:bg-brand-600 transition">
+          <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+              d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"/>
+          </svg>
+          Connexion
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Section Principale -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    
+    <!-- Hero Card -->
+    <div class="rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 overflow-hidden">
+      <div class="grid lg:grid-cols-2">
+        
+        <!-- Contenu texte -->
+        <div class="p-8 lg:p-12 flex flex-col justify-center">
+          <div class="inline-flex items-center gap-2 rounded-full bg-brand-50 dark:bg-brand-500/10 px-3 py-1 w-fit mb-6">
+            <span class="h-2 w-2 rounded-full bg-brand-500 animate-pulse"></span>
+            <span class="text-sm font-medium text-brand-600 dark:text-brand-400">Plateforme médicale</span>
+          </div>
+          
+          <h1 class="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white mb-4">
+            Trouvez le médecin
+            <span class="text-brand-500"> qu'il vous faut</span>
+          </h1>
+          
+          <p class="text-gray-600 dark:text-gray-400 mb-8 max-w-md">
+            Prenez rendez-vous facilement avec des professionnels de santé qualifiés près de chez vous.
+          </p>
+
+          <button 
+            (click)="toggleChat()"
+            class="inline-flex items-center justify-center gap-2 rounded-xl bg-brand-500 px-6 py-3 text-base font-medium text-white hover:bg-brand-600 transition w-fit">
+            <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+            </svg>
+            Trouver un médecin
+          </button>
+        </div>
+
+        <!-- Illustration côté droit -->
+        <div class="hidden lg:block bg-gradient-to-br from-brand-50 to-brand-100 dark:from-brand-900/20 dark:to-brand-800/20 p-8 lg:p-12">
+          <div class="grid grid-cols-2 gap-4 h-full">
+            
+            <!-- Mini carte 1 -->
+            <div class="rounded-xl bg-white dark:bg-gray-800 p-4 shadow-sm border border-gray-100 dark:border-gray-700">
+              <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-brand-50 dark:bg-brand-500/10 mb-3">
+                <svg class="h-5 w-5 text-brand-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                    d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+                </svg>
+              </div>
+              <p class="text-2xl font-bold text-gray-900 dark:text-white">500+</p>
+              <p class="text-sm text-gray-500 dark:text-gray-400">Cabinets</p>
+            </div>
+
+            <!-- Mini carte 2 -->
+            <div class="rounded-xl bg-white dark:bg-gray-800 p-4 shadow-sm border border-gray-100 dark:border-gray-700">
+              <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-success-50 dark:bg-success-500/10 mb-3">
+                <svg class="h-5 w-5 text-success-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                    d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/>
+                </svg>
+              </div>
+              <p class="text-2xl font-bold text-gray-900 dark:text-white">10K+</p>
+              <p class="text-sm text-gray-500 dark:text-gray-400">Patients</p>
+            </div>
+
+            <!-- Mini carte 3 -->
+            <div class="rounded-xl bg-white dark:bg-gray-800 p-4 shadow-sm border border-gray-100 dark:border-gray-700">
+              <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-warning-50 dark:bg-warning-500/10 mb-3">
+                <svg class="h-5 w-5 text-warning-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                    d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+              </div>
+              <p class="text-2xl font-bold text-gray-900 dark:text-white">24/7</p>
+              <p class="text-sm text-gray-500 dark:text-gray-400">Disponible</p>
+            </div>
+
+            <!-- Mini carte 4 -->
+            <div class="rounded-xl bg-white dark:bg-gray-800 p-4 shadow-sm border border-gray-100 dark:border-gray-700">
+              <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-50 dark:bg-blue-500/10 mb-3">
+                <svg class="h-5 w-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                    d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                </svg>
+              </div>
+              <p class="text-2xl font-bold text-gray-900 dark:text-white">100%</p>
+              <p class="text-sm text-gray-500 dark:text-gray-400">Sécurisé</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Comment ça marche -->
+    <div class="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4">
+      
+      <!-- Étape 1 -->
+      <div class="rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-6">
+        <div class="flex items-center gap-4 mb-4">
+          <div class="flex h-10 w-10 items-center justify-center rounded-full bg-brand-500 text-white font-bold">
+            1
+          </div>
+          <h3 class="font-semibold text-gray-900 dark:text-white">Choisissez</h3>
+        </div>
+        <p class="text-sm text-gray-600 dark:text-gray-400">
+          Sélectionnez la spécialité et la ville souhaitées via notre assistant.
+        </p>
+      </div>
+
+      <!-- Étape 2 -->
+      <div class="rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-6">
+        <div class="flex items-center gap-4 mb-4">
+          <div class="flex h-10 w-10 items-center justify-center rounded-full bg-success-500 text-white font-bold">
+            2
+          </div>
+          <h3 class="font-semibold text-gray-900 dark:text-white">Trouvez</h3>
+        </div>
+        <p class="text-sm text-gray-600 dark:text-gray-400">
+          Découvrez les cabinets disponibles et leurs créneaux horaires.
+        </p>
+      </div>
+
+      <!-- Étape 3 -->
+      <div class="rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-6">
+        <div class="flex items-center gap-4 mb-4">
+          <div class="flex h-10 w-10 items-center justify-center rounded-full bg-warning-500 text-white font-bold">
+            3
+          </div>
+          <h3 class="font-semibold text-gray-900 dark:text-white">Contactez</h3>
+        </div>
+        <p class="text-sm text-gray-600 dark:text-gray-400">
+          Obtenez les coordonnées du secrétariat pour réserver votre rendez-vous.
+        </p>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Footer Simple -->
+  <footer class="border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 py-6">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div class="flex items-center gap-2">
+          <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-brand-500">
+            <svg class="h-4 w-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+            </svg>
+          </div>
+          <span class="font-semibold text-gray-900 dark:text-white">MediCore</span>
+        </div>
+        <p class="text-sm text-gray-500 dark:text-gray-400">
+          © 2026 MediCore. Tous droits réservés.
+        </p>
+      </div>
+    </div>
+  </footer>
+</div>
+
+<!-- ========== CHATBOT WIDGET ========== -->
+
+<!-- Bouton flottant -->
+<button 
+  (click)="toggleChat()"
+  [class.hidden]="isChatOpen"
+  class="fixed bottom-6 right-6 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-brand-500 text-white shadow-lg hover:bg-brand-600 hover:scale-105 transition-all">
+  <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+      d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+  </svg>
+</button>
+
+<!-- Fenêtre Chat -->
+@if (isChatOpen) {
+  <div class="fixed bottom-6 right-6 z-50 w-[380px] max-w-[calc(100vw-48px)] rounded-2xl bg-white dark:bg-gray-800 shadow-2xl border border-gray-200 dark:border-gray-700 overflow-hidden">
+    
+    <!-- Header -->
+    <div class="bg-brand-500 px-5 py-4">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <div class="flex h-10 w-10 items-center justify-center rounded-full bg-white/20">
+            <svg class="h-5 w-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+            </svg>
+          </div>
+          <div>
+            <h3 class="font-semibold text-white">Assistant MediCore</h3>
+            <p class="text-xs text-white/80">En ligne</p>
+          </div>
+        </div>
+        <button 
+          (click)="closeChat()"
+          class="flex h-8 w-8 items-center justify-center rounded-full hover:bg-white/20 transition">
+          <svg class="h-5 w-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Messages -->
+    <div #chatMessages class="h-[350px] overflow-y-auto p-4 space-y-4 bg-gray-50 dark:bg-gray-900">
+      @for (message of messages; track $index) {
+        
+        <!-- Message Bot -->
+        @if (message.type === 'bot') {
+          <div class="flex gap-3">
+            <div class="flex-shrink-0 flex h-8 w-8 items-center justify-center rounded-full bg-brand-100 dark:bg-brand-500/20">
+              <svg class="h-4 w-4 text-brand-600 dark:text-brand-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                  d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+              </svg>
+            </div>
+            <div class="flex-1">
+              <div class="bg-white dark:bg-gray-800 rounded-2xl rounded-tl-none px-4 py-3 shadow-sm border border-gray-100 dark:border-gray-700">
+                <p class="text-sm text-gray-700 dark:text-gray-300 whitespace-pre-line">{{ message.content }}</p>
+              </div>
+              
+              <!-- Options -->
+              @if (message.options && message.options.length > 0 && !message.isTyping) {
+                <div class="mt-3 flex flex-wrap gap-2">
+                  @for (option of message.options; track option) {
+                    <button 
+                      (click)="currentStep === 'results' || currentStep === 'details' ? handleAction(option) : selectOption(option)"
+                      class="inline-flex items-center rounded-full bg-brand-50 dark:bg-brand-500/10 px-3 py-1.5 text-sm font-medium text-brand-700 dark:text-brand-400 hover:bg-brand-100 dark:hover:bg-brand-500/20 transition border border-brand-200 dark:border-brand-500/30">
+                      {{ option }}
+                    </button>
+                  }
+                </div>
+              }
+
+              <!-- Résultats cabinets -->
+              @if (message.cabinets && message.cabinets.length > 0) {
+                <div class="mt-3 space-y-2">
+                  @for (cabinet of message.cabinets; track cabinet.id) {
+                    <button 
+                      (click)="selectCabinet(cabinet)"
+                      class="w-full text-left bg-white dark:bg-gray-800 rounded-xl p-3 shadow-sm border border-gray-100 dark:border-gray-700 hover:border-brand-300 dark:hover:border-brand-500 transition">
+                      <div class="flex items-center gap-3">
+                        <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-brand-50 dark:bg-brand-500/10">
+                          <svg class="h-5 w-5 text-brand-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                              d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+                          </svg>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                          <h4 class="font-medium text-gray-900 dark:text-white truncate">{{ cabinet.nom }}</h4>
+                          <p class="text-xs text-gray-500 dark:text-gray-400 truncate">{{ cabinet.specialite }} • {{ cabinet.ville }}</p>
+                        </div>
+                        <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                        </svg>
+                      </div>
+                    </button>
+                  }
+                </div>
+              }
+            </div>
+          </div>
+        }
+
+        <!-- Message Utilisateur -->
+        @if (message.type === 'user') {
+          <div class="flex justify-end">
+            <div class="bg-brand-500 text-white rounded-2xl rounded-tr-none px-4 py-3 max-w-[80%]">
+              <p class="text-sm">{{ message.content }}</p>
+            </div>
+          </div>
+        }
+      }
+
+      <!-- Indicateur de frappe -->
+      @if (isTyping) {
+        <div class="flex gap-3">
+          <div class="flex-shrink-0 flex h-8 w-8 items-center justify-center rounded-full bg-brand-100 dark:bg-brand-500/20">
+            <svg class="h-4 w-4 text-brand-600 dark:text-brand-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+            </svg>
+          </div>
+          <div class="bg-white dark:bg-gray-800 rounded-2xl rounded-tl-none px-4 py-3 shadow-sm border border-gray-100 dark:border-gray-700">
+            <div class="flex gap-1">
+              <span class="h-2 w-2 rounded-full bg-gray-400 animate-bounce" style="animation-delay: 0ms"></span>
+              <span class="h-2 w-2 rounded-full bg-gray-400 animate-bounce" style="animation-delay: 150ms"></span>
+              <span class="h-2 w-2 rounded-full bg-gray-400 animate-bounce" style="animation-delay: 300ms"></span>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+
+    <!-- Input (si étape nom) -->
+    @if (currentStep === 'nom') {
+      <div class="p-4 bg-white dark:bg-gray-800 border-t border-gray-100 dark:border-gray-700">
+        <form (ngSubmit)="submitUserInput()" class="flex gap-2">
+          <input 
+            type="text"
+            [(ngModel)]="userInput"
+            name="userInput"
+            placeholder="Nom du médecin (optionnel)..."
+            class="flex-1 rounded-xl border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 px-4 py-2.5 text-sm text-gray-900 dark:text-white focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/20">
+          <button 
+            type="submit"
+            class="flex h-10 w-10 items-center justify-center rounded-xl bg-brand-500 text-white hover:bg-brand-600 transition">
+            <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
+            </svg>
+          </button>
+        </form>
+      </div>
+    }
+  </div>
+}

@@ -25,9 +25,14 @@ import { AppLayoutAdminComponent } from './shared/layout/app-layout-admin/app-la
 import { ListeAttenteComponent } from './pages/secretaire/liste-attente/liste-attente.component';
 import { PatientDetailComponent } from './pages/Medecin/patient-detail/patient-detail.component';
 import { MedicamentComponent } from './pages/admin/medicament/medicament.component';
-
+import { HomeComponent } from './pages/home/home.component';
 
 export const routes: Routes = [
+  { 
+    path: 'home', 
+    component: HomeComponent, 
+    title: 'MediCore - Trouvez votre médecin' 
+  },
  
   {
     path: '',
