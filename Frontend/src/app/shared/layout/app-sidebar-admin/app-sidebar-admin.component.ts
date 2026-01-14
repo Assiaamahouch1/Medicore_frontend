@@ -51,7 +51,7 @@ navItems: NavItem[] = [
         d="M12 3v18m9-9H3" />
     </svg>
       `,
-      path: "/medicaments",
+      path: "/admin/medicaments",
     },
     
 

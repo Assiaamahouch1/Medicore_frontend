@@ -26,6 +26,8 @@ import { ListeAttenteComponent } from './pages/secretaire/liste-attente/liste-at
 import { PatientDetailComponent } from './pages/Medecin/patient-detail/patient-detail.component';
 import { MedicamentComponent } from './pages/admin/medicament/medicament.component';
 import { HomeComponent } from './pages/home/home.component';
+import {CabinetTablesComponent} from './pages/cabinets/cabinet.component'
+import {CabinetAdminTablesComponent} from './pages/admin/cabinets/cabinet.component'
 
 export const routes: Routes = [
   { 
@@ -63,12 +65,13 @@ export const routes: Routes = [
         canActivate: [AuthGuard],
         title: 'Angular Admins | TailAdmin'
       },
-       // Place la feature Cabinets sous le layout Admin
       {
-        path: 'admin/cabinets',
-        loadChildren: () =>
-          import('./pages/admin/cabinets/cabinets.module').then((m) => m.CabinetsModule),
+        path: 'cabinets',
+        component: CabinetTablesComponent,
+        canActivate: [AuthGuard],
+        title: 'Angular Admins | TailAdmin'
       },
+       // Place la feature Cabinets sous le layout Admin
     ]
   },
 
@@ -138,15 +141,16 @@ export const routes: Routes = [
 
       },
       {
-        path: 'medicaments',
+        path: 'admin/medicaments',
         component: MedicamentComponent,
         canActivate: [AuthGuard],
         title: 'Angular Admins | TailAdmin'
       },
    {
         path: 'admin/cabinets',
-        loadChildren: () =>
-          import('./pages/admin/cabinets/cabinets.module').then((m) => m.CabinetsModule),
+        component: CabinetAdminTablesComponent,
+        canActivate: [AuthGuard],
+        title: 'Angular Admins | TailAdmin'
       },
       
     ]

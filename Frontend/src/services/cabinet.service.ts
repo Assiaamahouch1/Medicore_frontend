@@ -124,17 +124,19 @@ export class CabinetService {
   }
   // ============ DASHBOARD ADMIN STATS ============
 
-  /**
-   * Récupère les statistiques globales pour le dashboard SuperAdmin
-   */
-  getDashboardStats(): Observable<AdminDashboardStats> {
-    return this.http.get<AdminDashboardStats>(`${this.apiUrl}/stats/dashboard`);
-  }
+  
 
   /**
    * Récupère les statistiques d'un cabinet spécifique (pour Admin de cabinet)
    */
   getCabinetStats(cabinetId: number): Observable<Cabinet> {
     return this.http.get<Cabinet>(`${this.apiUrl}/stats/cabinet/${cabinetId}`);
+  }
+
+  getDashboardStats(): Observable<AdminDashboardStats> {
+    const url = `${this.apiUrl}/admin/dashboard/stats`;
+    console.log('🔵 CabinetService.getDashboardStats() - URL:', url);
+    console.log('🔵 apiUrl base:', this.apiUrl);
+    return this.http.get<AdminDashboardStats>(url);
   }
 }
