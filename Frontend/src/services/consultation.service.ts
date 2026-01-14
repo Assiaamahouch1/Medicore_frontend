@@ -25,9 +25,10 @@ export interface DocumentMedical {
 }
 export interface LigneOrdonnance {
   id?: string;
-  description?: string;
+  nom?: string;
   dosage?: string;
   duree?: string;
+  forme?: string;
   ordonnanceId?: string;
   medicamentId?: string;
 }
@@ -47,9 +48,10 @@ export interface CreateOrdonnanceRequest {
 }
 
 export interface CreateLigneOrdonnanceRequest {
-  description?: string;
+  nom?: string;
   dosage?: string;
   duree?: string;
+  forme?: string;
   medicamentId?: string;
 }
 

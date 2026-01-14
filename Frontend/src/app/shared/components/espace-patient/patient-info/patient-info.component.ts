@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Patient } from '../../../../../../services/patient.service';
+import { Patient } from '../../../../../services/patient.service';
 
 @Component({
   selector: 'app-patient-info',

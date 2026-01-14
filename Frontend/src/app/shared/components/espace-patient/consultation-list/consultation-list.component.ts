@@ -1,10 +1,10 @@
 import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Consultation, Ordonnance } from '../../../../../../services/consultation.service';
-import { ButtonComponent } from '../../../../../shared/components/ui/button/button.component';
-import { Patient } from '../../../../../../services/patient.service';
-import { AuthService, AuthAdmin } from '../../../../../../services/auth.service';
-import { CabinetService, Cabinet } from '../../../../../../services/cabinet.service';
+import { Consultation, Ordonnance } from '../../../../../services/consultation.service';
+import { ButtonComponent } from '../../ui/button/button.component';
+import { Patient } from '../../../../../services/patient.service';
+import { AuthService, AuthAdmin } from '../../../../../services/auth.service';
+import { CabinetService, Cabinet } from '../../../../../services/cabinet.service';
 
 
 @Component({
@@ -327,7 +327,8 @@ export class ConsultationListComponent implements OnInit {
             font-size: 10pt;
           }
           .prescription-details p {
-            margin: 4px 0;
+            margin: 0;
+             white-space: nowrap; 
           }
           .prescription-details strong {
             font-weight: bold;
@@ -453,11 +454,13 @@ export class ConsultationListComponent implements OnInit {
           ${ordonnance.lignes && ordonnance.lignes.length > 0 
             ? ordonnance.lignes.map((ligne, index) => `
               <div class="prescription-item">
-                <div class="prescription-number">${index + 1}.</div>
-                <div class="prescription-description">${ligne.description || 'Prescription'}</div>
+                <div class="prescription-description">${ligne.nom || 'Prescription'}</div>
                 <div class="prescription-details">
-                  ${ligne.dosage ? `<p><strong>Dosage:</strong> ${ligne.dosage}</p>` : ''}
-                  ${ligne.duree ? `<p><strong>Durée du traitement:</strong> ${ligne.duree}</p>` : ''}
+                    <p>
+                      ${ligne.dosage ? `<strong>Dosage:</strong> ${ligne.dosage}` : ''}
+                      ${ligne.forme ? ` | <strong>Forme:</strong> ${ligne.forme}` : ''}
+                      ${ligne.duree ? ` | <strong>Durée:</strong> ${ligne.duree}` : ''}
+                    </p>
                 </div>
               </div>
             `).join('')

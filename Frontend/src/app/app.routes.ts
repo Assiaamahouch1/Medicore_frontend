@@ -24,6 +24,7 @@ import { FacturationComponent } from './pages/secretaire/facturation/facturation
 import { AppLayoutAdminComponent } from './shared/layout/app-layout-admin/app-layout-admin.component';
 import { ListeAttenteComponent } from './pages/secretaire/liste-attente/liste-attente.component';
 import { PatientDetailComponent } from './pages/Medecin/patient-detail/patient-detail.component';
+import { MedicamentComponent } from './pages/admin/medicament/medicament.component';
 
 
 export const routes: Routes = [
@@ -48,6 +49,12 @@ export const routes: Routes = [
       {
         path: 'admins',
         component: BasicTablesComponent,
+        canActivate: [AuthGuard],
+        title: 'Angular Admins | TailAdmin'
+      },
+      {
+        path: 'medicaments',
+        component: MedicamentComponent,
         canActivate: [AuthGuard],
         title: 'Angular Admins | TailAdmin'
       },
@@ -125,11 +132,18 @@ export const routes: Routes = [
         title: 'Angular Profile | TailAdmin'
 
       },
+      {
+        path: 'medicaments',
+        component: MedicamentComponent,
+        canActivate: [AuthGuard],
+        title: 'Angular Admins | TailAdmin'
+      },
    {
         path: 'admin/cabinets',
         loadChildren: () =>
           import('./pages/admin/cabinets/cabinets.module').then((m) => m.CabinetsModule),
       },
+      
     ]
   },
    {

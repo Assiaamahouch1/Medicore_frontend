@@ -1,7 +1,7 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Patient } from '../../../../../../services/patient.service';
-import { RendezVous } from '../../../../../../services/rendezvous.service';
+import { Patient } from '../../../../../services/patient.service';
+import { RendezVous } from '../../../../../services/rendezvous.service';
 
 @Component({
   selector: 'app-patient-list',
@@ -36,5 +36,6 @@ export class PatientListComponent {
   onPatientClick(patient: Patient) {
     this.patientSelected.emit(patient);
   }
+  
 }
 

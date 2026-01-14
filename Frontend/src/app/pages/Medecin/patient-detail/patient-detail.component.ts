@@ -6,12 +6,12 @@ import { RendezvousService, RendezVous } from '../../../../services/rendezvous.s
 import { ConsultationService, Consultation, DocumentMedical, Ordonnance, CreateOrdonnanceRequest } from '../../../../services/consultation.service';
 import { AuthService, AuthAdmin } from '../../../../services/auth.service';
 import { ButtonComponent } from '../../../shared/components/ui/button/button.component';
-import { PatientListComponent } from './components/patient-list/patient-list.component';
-import { PatientInfoComponent } from './components/patient-info/patient-info.component';
-import { ConsultationListComponent } from './components/consultation-list/consultation-list.component';
-import { ConsultationFormComponent } from './components/consultation-form/consultation-form.component';
-import { OrdonnanceFormComponent } from './components/ordonnance-form/ordonnance-form.component';
-import { MedicalRecordComponent } from './components/medical-record/medical-record.component';
+import { PatientListComponent } from '../../../shared/components/espace-patient/patient-list/patient-list.component';
+import { PatientInfoComponent } from '../../../shared/components/espace-patient/patient-info/patient-info.component';
+import { ConsultationListComponent } from '../../../shared/components/espace-patient/consultation-list/consultation-list.component';
+import { ConsultationFormComponent } from '../../../shared/components/espace-patient/consultation-form/consultation-form.component';
+import { OrdonnanceFormComponent } from '../../../shared/components/espace-patient/ordonnance-form/ordonnance-form.component';
+import { MedicalRecordComponent } from '../../../shared/components/espace-patient/medical-record/medical-record.component';
 
 @Component({
   selector: 'app-patient-detail',
@@ -394,6 +394,78 @@ export class PatientDetailComponent implements OnInit {
           console.error('Erreur création dossier:', err);
           alert('Erreur lors de la création du dossier médical');
         }
+      });
+    }
+  }
+  closeDossier() {
+    if (!this.selectedPatient?.id) {
+      return;
+    }
+
+    // Trouver le rendez-vous du patient actuel
+    const currentRdv = this.patientsArrives.find(rdv => rdv.patientId === this.selectedPatient?.id);
+    
+    if (currentRdv && currentRdv.idRdv) {
+      // Trouver le prochain patient AVANT de terminer le rendez-vous
+      const currentIndex = this.patientsArrives.findIndex(rdv => rdv.patientId === this.selectedPatient?.id);
+      const nextRdv = currentIndex >= 0 && currentIndex < this.patientsArrives.length - 1 
+        ? this.patientsArrives[currentIndex + 1] 
+        : null;
+      
+      // Terminer le rendez-vous (changer le statut de "arrivé" à "terminé")
+      this.rendezvousService.terminerRendezVous(currentRdv.idRdv).subscribe({
+        next: () => {
+          console.log('Rendez-vous terminé avec succès');
+          
+          // Recharger la liste des patients arrivés pour mettre à jour les notifications
+          this.loadPatientsArrives();
+          
+          if (nextRdv && nextRdv.patientId) {
+            // Passer au patient suivant
+            const nextPatient = this.patients.find(p => p.id === nextRdv.patientId);
+            if (nextPatient) {
+              // Attendre un peu pour que la liste soit mise à jour
+              setTimeout(() => {
+                this.selectPatient(nextPatient);
+              }, 300);
+            } else {
+              // Si le patient suivant n'est pas dans la liste, le charger
+              this.patientService.getById(nextRdv.patientId).subscribe({
+                next: (patient) => {
+                  setTimeout(() => {
+                    this.selectPatient(patient);
+                  }, 300);
+                },
+                error: () => {
+                  // Retourner à la liste si le patient n'est pas trouvé
+                  this.activeTab = 'liste';
+                  this.selectedPatient = null;
+                  this.router.navigate(['/espacepatients']).catch(err => {
+                    console.error('Erreur navigation:', err);
+                  });
+                }
+              });
+            }
+          } else {
+            // Pas de patient suivant, retourner à la liste
+            this.activeTab = 'liste';
+            this.selectedPatient = null;
+            this.router.navigate(['/espacepatients']).catch(err => {
+              console.error('Erreur navigation:', err);
+            });
+          }
+        },
+        error: (err) => {
+          console.error('Erreur lors de la fermeture du dossier:', err);
+          alert('Erreur lors de la fermeture du dossier');
+        }
+      });
+    } else {
+      // Pas de rendez-vous trouvé, simplement retourner à la liste
+      this.activeTab = 'liste';
+      this.selectedPatient = null;
+      this.router.navigate(['/espacepatients']).catch(err => {
+        console.error('Erreur navigation:', err);
       });
     }
   }

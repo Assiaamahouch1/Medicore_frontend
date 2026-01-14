@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { catchError } from 'rxjs/operators';
+import { of } from 'rxjs';
 
 export interface RendezVous {
   idRdv?: number;
@@ -43,6 +45,7 @@ export class RendezvousService {
   heureRdv?: string;
   motif?: string;
   notes?: string | null;
+  statut?: string;
   cabinetId?:number;
 }): Observable<RendezVous> {
   return this.http.patch<RendezVous>(`${this.apiUrl}/${id}/modifier-partiel`, data);
@@ -70,5 +73,9 @@ getRendezVousArrive(cabinetId: number) {
 
 setRendezVousArrive(idRdv: number) {
   return this.http.put<RendezVous>(`${this.apiUrl}/Arrive/${idRdv}`,{});
+}
+
+terminerRendezVous(idRdv: number): Observable<RendezVous> {
+  return this.http.put<RendezVous>(`${this.apiUrl}/Termine/${idRdv}`, {});
 }
 }

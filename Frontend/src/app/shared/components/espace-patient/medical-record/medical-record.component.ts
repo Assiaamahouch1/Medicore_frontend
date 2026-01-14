@@ -1,8 +1,8 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { DocumentMedical } from '../../../../../../services/consultation.service';
-import { ButtonComponent } from '../../../../../shared/components/ui/button/button.component';
+import { DocumentMedical } from '../../../../../services/consultation.service';
+import { ButtonComponent } from '../../ui/button/button.component';
 
 @Component({
   selector: 'app-medical-record',
