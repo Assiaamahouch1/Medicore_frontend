@@ -22,9 +22,16 @@ import { FacturationComponent } from './pages/secretaire/facturation/facturation
 import { AppLayoutAdminComponent } from './shared/layout/app-layout-admin/app-layout-admin.component';
 import { ListeAttenteComponent } from './pages/secretaire/liste-attente/liste-attente.component';
 import { PatientDetailComponent } from './pages/Medecin/patient-detail/patient-detail.component';
+import { HomeComponent } from './pages/home/home.component';
 
 
 export const routes: Routes = [
+  // ========== PAGE D'ACCUEIL PUBLIQUE ==========
+  { 
+    path: 'home', 
+    component: HomeComponent, 
+    title: 'MediCore - Trouvez votre médecin' 
+  },
  
   {
     path: '',
@@ -42,18 +49,6 @@ export const routes: Routes = [
         component: ProfileComponent,
         canActivate: [AuthGuard],
         title: 'Angular Profile | TailAdmin'
-      },
-      {
-        path: 'admins',
-        component: BasicTablesComponent,
-        canActivate: [AuthGuard],
-        title: 'Angular Admins | TailAdmin'
-      },
-       // Place la feature Cabinets sous le layout Admin
-      {
-        path: 'admin/cabinets',
-        loadChildren: () =>
-          import('./pages/admin/cabinets/cabinets.module').then((m) => m.CabinetsModule),
       },
     ]
   },
@@ -114,16 +109,21 @@ export const routes: Routes = [
         path: 'dashboardadmin',
         component: DashboardAdminComponent,
         canActivate: [AuthGuard],
-        title: 'Angular Dashboard | TailAdmin'
+        title: 'Dashboard Admin | MediCore'
       },
        {
         path: 'profileadmin',
         component: ProfileAdminComponent,
         canActivate: [AuthGuard],
-        title: 'Angular Profile | TailAdmin'
-
+        title: 'Profile Admin | MediCore'
       },
-   {
+      {
+        path: 'admins',
+        component: BasicTablesComponent,
+        canActivate: [AuthGuard],
+        title: 'Gestion Admins | MediCore'
+      },
+      {
         path: 'admin/cabinets',
         loadChildren: () =>
           import('./pages/admin/cabinets/cabinets.module').then((m) => m.CabinetsModule),
@@ -152,10 +152,14 @@ export const routes: Routes = [
     
   },
  
-  { path: 'signin', component: SignInComponent, title: 'Sign In | TailAdmin' },
-  { path: 'forgot-password', component: ForgotComponent },
-  { path: 'reset-password/:token', component: ResetComponent },
+  // ========== ROUTES PUBLIQUES ==========
+  { path: 'signin', component: SignInComponent, title: 'Sign In | MediCore' },
+  { path: 'forgot-password', component: ForgotComponent, title: 'Mot de passe oublié | MediCore' },
+  { path: 'reset-password/:token', component: ResetComponent, title: 'Réinitialisation | MediCore' },
 
+  // Redirection vers la page d'accueil par défaut
+  { path: '', redirectTo: 'home', pathMatch: 'full' },
+  
   { path: '**', component: NotFoundComponent, title: '404 Not Found' },
   
 ];
